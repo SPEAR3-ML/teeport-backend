@@ -13,6 +13,7 @@
   "author": "Zhe Zhang",
   "license": "ISC",
   "dependencies": {
+    "lodash": "^4.17.15",
     "ws": "^7.2.0"
   }
 }
