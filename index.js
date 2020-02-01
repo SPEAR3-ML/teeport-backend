@@ -1,27 +1,26 @@
-const TaskServer = require('./src/task-server')
+const df = require('dateformat')
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const version = '0.1'
 
-const wss = new WebSocket.Server({ port: 8080 })
+const serve = async () => {
+  console.log(`================== SPEAR3 Platform v${version} ==================`)
+  const current = new Date()
+  console.log(`Service starting time : ${df(current, 'yyyy-mm-dd HH:MM:ss')}`)
 
-wss.on('connection', (ws) => {
-  ws.on('message', async (message) => {
-    const msg = JSON.parse(message)
-    const { type } = msg
-    switch (type) {
-      case 'evaluate':
-        break
-      case 'monitor':
-        console.log(`monitor`)
-        break
-      default:
-        console.log(`received: ${message}`)
+  const configs = {
+    taskServer: {
+      port: 8080
+    },
+    taskLog: {
+      level: 'info',
+      label: 'task-server'
     }
-    // await sleep(3000)
-    ws.send(JSON.stringify({
-      msg: msg,
-    }))
-  })
- 
-  ws.send('something')
-})
+  }
+  const conf = require('./src/configs')
+  conf.init(configs)
+
+  const taskServer = require('./src/singletons/task-server')
+  taskServer.start()
+}
+
+serve()

@@ -10,6 +10,8 @@ class TaskServer {
 
   async start () {
     const { port } = this.configs
+    const { logger } = this.plugins
+
     const server = this.server = new WebSocket.Server({ port })
 
     server.on('connection', (ws) => {
@@ -20,10 +22,10 @@ class TaskServer {
           case 'evaluate':
             break
           case 'monitor':
-            console.log(`monitor`)
+            logger.info(`monitor`)
             break
           default:
-            console.log(`received: ${message}`)
+            logger.warn(`received: ${message}`)
         }
 
         await sleep(3000)

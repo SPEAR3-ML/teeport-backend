@@ -13,7 +13,9 @@
   "author": "Zhe Zhang",
   "license": "ISC",
   "dependencies": {
+    "dateformat": "^3.0.3",
     "lodash": "^4.17.15",
+    "winston": "^3.2.1",
     "ws": "^7.2.0"
   }
 }
