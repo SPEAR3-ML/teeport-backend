@@ -12,7 +12,7 @@ const Logger = (configs) => {
     format: combine(
       label({ label: _label }),
       timestamp(),
-      spear3Format
+      spear3Format,
     ),
     defaultMeta: { service: _label },
     transports: [
@@ -20,9 +20,9 @@ const Logger = (configs) => {
       // Write all logs with level `error` and below to `error.log`
       new transports.File({
         filename: `error_${label}.log`,
-        level: 'error'
+        level: 'error',
       }),
-    ]
+    ],
   })
 
   return logger

@@ -22,7 +22,7 @@ class TaskServer {
           case 'evaluate':
             break
           case 'monitor':
-            logger.info(`monitor`)
+            logger.info('monitor')
             break
           default:
             logger.warn(`received: ${message}`)
@@ -33,7 +33,7 @@ class TaskServer {
           msg,
         }))
       })
-     
+
       ws.send('hello there')
     })
   }

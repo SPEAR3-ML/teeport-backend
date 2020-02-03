@@ -9,12 +9,12 @@ const serve = async () => {
 
   const configs = {
     taskServer: {
-      port: 8080
+      port: 8080,
     },
     taskLog: {
       level: 'info',
-      label: 'task-server'
-    }
+      label: 'task-server',
+    },
   }
   const conf = require('./src/configs')
   conf.init(configs)
