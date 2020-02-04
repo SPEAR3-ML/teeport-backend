@@ -1,6 +1,6 @@
 const df = require('dateformat')
 
-const version = '0.1'
+const version = '0.1.0'
 
 const serve = async () => {
   console.log(`================== SPEAR3 Platform v${version} ==================`)
