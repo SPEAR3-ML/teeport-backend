@@ -19,7 +19,7 @@ const Logger = (configs) => {
       new transports.Console(),
       // Write all logs with level `error` and below to `error.log`
       new transports.File({
-        filename: `error_${label}.log`,
+        filename: `error_${_label}.log`,
         level: 'error',
       }),
     ],
