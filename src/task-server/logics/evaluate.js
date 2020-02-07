@@ -1,7 +1,12 @@
 const WebSocket = require('ws')
+const { sleep } = require('../../utils/helpers')
 // const math = require('mathjs')
 
-const evaluate = (msg, ws, server, logger) => {
+const evaluate = async (msg, ws, server, logger) => {
+  if (msg.gen === 5) {
+    await sleep(3000)
+  }
+
   server.clients.forEach(client => {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(msg))
