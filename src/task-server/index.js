@@ -1,5 +1,9 @@
 const WebSocket = require('ws')
-const { evaluate, evaluated, done, monitor } = require('./logics')
+const {
+  connect, disconnect,
+  evaluate, evaluated, done,
+  monitor,
+} = require('./logics')
 
 class TaskServer {
   constructor (configs, plugins) {
@@ -39,6 +43,12 @@ class TaskServer {
         //   msg,
         // }))
       })
+
+      ws.on('close', (code, reason) => {
+        disconnect(code, reason, ws, server, logger)
+      })
+
+      connect(ws, server, logger)
       // ws.send('hello there')
     })
   }

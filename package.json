@@ -4,7 +4,9 @@
   "description": "The future platform for all ML and EA stuff in SLAC",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "set \"NODE_ENV=production\" && nodemon .",
+    "debug": "set \"NODE_ENV=development\" && nodemon ."
   },
   "keywords": [
     "ML",
@@ -14,8 +16,13 @@
   "license": "ISC",
   "dependencies": {
     "dateformat": "^3.0.3",
+    "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
     "mathjs": "^6.6.0",
+    "redux": "^4.0.5",
+    "redux-immutable": "^4.0.0",
+    "reselect": "^4.0.0",
+    "shortid": "^2.2.15",
     "winston": "^3.2.1",
     "ws": "^7.2.0"
   },
