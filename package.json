@@ -1,6 +1,6 @@
 {
   "name": "spear3-platform",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "The future platform for all ML and EA stuff in SLAC",
   "main": "index.js",
   "scripts": {
