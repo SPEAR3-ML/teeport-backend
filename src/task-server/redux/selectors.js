@@ -2,9 +2,16 @@ const { createSelector } = require('reselect')
 
 const selectClients = createSelector(
   [
-    state => state.getIn('clients'),
+    state => state.get('clients'),
   ],
   clients => clients.toJS(),
 )
 
-module.exports = { selectClients }
+const selectTasks = createSelector(
+  [
+    state => state.get('tasks'),
+  ],
+  clients => clients.toJS(),
+)
+
+module.exports = { selectClients, selectTasks }

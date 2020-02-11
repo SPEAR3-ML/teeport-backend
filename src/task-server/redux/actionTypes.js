@@ -1,7 +1,11 @@
 const CONNECT = 'CONNECT'
 const DISCONNECT = 'DISCONNECT'
+const NEW_TASK = 'NEW_TASK'
+const UPDATE_TASK = 'UPDATE_TASK'
 
 module.exports = {
   CONNECT,
   DISCONNECT,
+  NEW_TASK,
+  UPDATE_TASK,
 }

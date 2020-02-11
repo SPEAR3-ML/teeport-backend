@@ -10,6 +10,12 @@ const connect = (ws, server, logger) => {
   ws.id = sid.generate()
   logger.debug(`client ${ws.id} connected`)
   store.dispatch(connectAction(ws.id))
+
+  const msg = {
+    type: 'hello',
+    id: ws.id,
+  }
+  ws.send(JSON.stringify(msg))
 }
 
 const disconnect = (code, reason, ws, server, logger) => {

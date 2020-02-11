@@ -3,6 +3,8 @@ const {
   connect, disconnect,
   evaluate, evaluated, done,
   monitor,
+  getTasks, newTask,
+  getClients,
 } = require('./logics')
 
 class TaskServer {
@@ -34,6 +36,15 @@ class TaskServer {
             break
           case 'monitor':
             monitor(msg, ws, server, logger)
+            break
+          case 'getTasks':
+            getTasks(msg, ws, server, logger)
+            break
+          case 'newTask':
+            newTask(msg, ws, server, logger)
+            break
+          case 'getClients':
+            getClients(msg, ws, server, logger)
             break
           default:
             logger.warn(`received: ${message}`)
