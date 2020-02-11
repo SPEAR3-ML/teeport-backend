@@ -3,7 +3,7 @@ const {
   connect, disconnect,
   evaluate, evaluated, done,
   monitor,
-  getTasks, newTask,
+  getTasks, newTask, pauseTask, startTask, stopTask,
   getClients,
 } = require('./logics')
 
@@ -42,6 +42,15 @@ class TaskServer {
             break
           case 'newTask':
             newTask(msg, ws, server, logger)
+            break
+          case 'pauseTask':
+            pauseTask(msg, ws, server, logger)
+            break
+          case 'startTask':
+            startTask(msg, ws, server, logger)
+            break
+          case 'stopTask':
+            stopTask(msg, ws, server, logger)
             break
           case 'getClients':
             getClients(msg, ws, server, logger)

@@ -4,6 +4,9 @@ const generate = require('project-name-generator')
 const store = require('../redux/store')
 const {
   newTask: newTaskAction,
+  pauseTask: pauseTaskAction,
+  startTask: startTaskAction,
+  stopTask: stopTaskAction,
 } = require('../redux/actions')
 const {
   selectTasks,
@@ -36,7 +39,25 @@ const newTask = (msg, ws, server, logger) => {
   logger.debug(`task ${id} has been created`)
 }
 
+const pauseTask = (msg, ws, server, logger) => {
+  const { id } = msg
+  store.dispatch(pauseTaskAction(id))
+}
+
+const startTask = (msg, ws, server, logger) => {
+  const { id } = msg
+  store.dispatch(startTaskAction(id))
+}
+
+const stopTask = (msg, ws, server, logger) => {
+  const { id } = msg
+  store.dispatch(stopTaskAction(id))
+}
+
 module.exports = {
   getTasks,
   newTask,
+  pauseTask,
+  startTask,
+  stopTask,
 }

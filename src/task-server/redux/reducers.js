@@ -2,7 +2,7 @@ const { fromJS } = require('immutable')
 
 const {
   CONNECT, DISCONNECT,
-  NEW_TASK, UPDATE_TASK,
+  NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK,
 } = require('./actionTypes')
 const { clientDef, taskDef } = require('./defs')
 
@@ -51,6 +51,34 @@ const reducer = (state = initialState, action) => {
         },
       }
       return state.mergeDeep(patch)
+    }
+    case PAUSE_TASK: {
+      return state.withMutations(prev => {
+        const status = prev.getIn(['tasks', action.id, 'status'])
+        if (status === 'running') {
+          prev.setIn(['tasks', action.id, 'status'], 'paused')
+        }
+      })
+    }
+    case START_TASK: {
+      return state.withMutations(prev => {
+        const status = prev.getIn(['tasks', action.id, 'status'])
+        if (status === 'init') {
+          prev.setIn(['tasks', action.id, 'startedAt'], Date.now())
+          prev.setIn(['tasks', action.id, 'status'], 'running')
+        } else if (status === 'paused') {
+          prev.setIn(['tasks', action.id, 'status'], 'running')
+        }
+      })
+    }
+    case STOP_TASK: {
+      return state.withMutations(prev => {
+        const status = prev.getIn(['tasks', action.id, 'status'])
+        if (['init', 'paused', 'running'].includes(status)) {
+          prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
+          prev.setIn(['tasks', action.id, 'status'], 'cancelled')
+        }
+      })
     }
     default:
       return state
