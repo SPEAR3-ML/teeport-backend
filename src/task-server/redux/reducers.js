@@ -14,9 +14,14 @@ const initialState = fromJS({
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case CONNECT: {
+      const client = clientDef()
+      const { id, client: _client } = action
+      const { name, type } = _client
+      client.name = name
+      client.type = type
       const patch = {
         clients: {
-          [action.id]: clientDef(),
+          [id]: client,
         },
       }
       return state.mergeDeep(patch)

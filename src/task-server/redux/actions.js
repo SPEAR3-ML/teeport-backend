@@ -3,9 +3,13 @@ const {
   NEW_TASK, UPDATE_TASK,
 } = require('./actionTypes')
 
-const connect = (id) => ({
+const connect = (id, name, type) => ({
   type: CONNECT,
   id,
+  client: {
+    name,
+    type,
+  },
 })
 
 const disconnect = (id) => ({

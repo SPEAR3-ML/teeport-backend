@@ -20,7 +20,7 @@ class TaskServer {
 
     const server = this.server = new WebSocket.Server({ port })
 
-    server.on('connection', (ws) => {
+    server.on('connection', (ws, req) => {
       ws.on('message', async (message) => {
         const msg = JSON.parse(message)
         const { type } = msg
@@ -59,7 +59,7 @@ class TaskServer {
         disconnect(code, reason, ws, server, logger)
       })
 
-      connect(ws, server, logger)
+      connect(req, ws, server, logger)
       // ws.send('hello there')
     })
   }
