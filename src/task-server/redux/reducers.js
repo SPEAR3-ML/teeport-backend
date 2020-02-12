@@ -2,7 +2,7 @@ const { fromJS } = require('immutable')
 
 const {
   CONNECT, DISCONNECT,
-  NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK,
+  NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK,
 } = require('./actionTypes')
 const { clientDef, taskDef } = require('./defs')
 
@@ -81,6 +81,15 @@ const reducer = (state = initialState, action) => {
         if (['init', 'paused', 'running'].includes(status)) {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
           prev.setIn(['tasks', action.id, 'status'], 'cancelled')
+        }
+      })
+    }
+    case COMPLETE_TASK: {
+      return state.withMutations(prev => {
+        const status = prev.getIn(['tasks', action.id, 'status'])
+        if (status === 'running') {
+          prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
+          prev.setIn(['tasks', action.id, 'status'], 'completed')
         }
       })
     }

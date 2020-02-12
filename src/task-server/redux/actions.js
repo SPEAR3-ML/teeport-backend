@@ -1,6 +1,6 @@
 const {
   CONNECT, DISCONNECT,
-  NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK,
+  NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK,
 } = require('./actionTypes')
 
 const connect = (id, name, type) => ({
@@ -48,6 +48,11 @@ const stopTask = (id, task) => ({
   id,
 })
 
+const completeTask = (id, task) => ({
+  type: COMPLETE_TASK,
+  id,
+})
+
 module.exports = {
   connect,
   disconnect,
@@ -56,4 +61,5 @@ module.exports = {
   pauseTask,
   startTask,
   stopTask,
+  completeTask,
 }

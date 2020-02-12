@@ -7,6 +7,7 @@ const {
   pauseTask: pauseTaskAction,
   startTask: startTaskAction,
   stopTask: stopTaskAction,
+  completeTask: completeTaskAction,
 } = require('../redux/actions')
 const {
   selectTasks,
@@ -42,16 +43,29 @@ const newTask = (msg, ws, server, logger) => {
 const pauseTask = (msg, ws, server, logger) => {
   const { id } = msg
   store.dispatch(pauseTaskAction(id))
+
+  logger.debug(`task ${id} has been paused`)
 }
 
 const startTask = (msg, ws, server, logger) => {
   const { id } = msg
   store.dispatch(startTaskAction(id))
+
+  logger.debug(`task ${id} started`)
 }
 
 const stopTask = (msg, ws, server, logger) => {
   const { id } = msg
   store.dispatch(stopTaskAction(id))
+
+  logger.debug(`task ${id} has been terminated`)
+}
+
+const completeTask = (msg, ws, server, logger) => {
+  const { id } = msg
+  store.dispatch(completeTaskAction(id))
+
+  logger.debug(`task ${id} has been completed`)
 }
 
 module.exports = {
@@ -60,4 +74,5 @@ module.exports = {
   pauseTask,
   startTask,
   stopTask,
+  completeTask,
 }

@@ -5,6 +5,7 @@ const UPDATE_TASK = 'UPDATE_TASK'
 const PAUSE_TASK = 'PAUSE_TASK'
 const START_TASK = 'START_TASK'
 const STOP_TASK = 'STOP_TASK'
+const COMPLETE_TASK = 'COMPLETE_TASK'
 
 module.exports = {
   CONNECT,
@@ -14,4 +15,5 @@ module.exports = {
   PAUSE_TASK,
   START_TASK,
   STOP_TASK,
+  COMPLETE_TASK,
 }
