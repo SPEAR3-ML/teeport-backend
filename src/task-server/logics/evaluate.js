@@ -1,30 +1,28 @@
 const WebSocket = require('ws')
-const { sleep } = require('../../utils/helpers')
+// const { sleep } = require('../../utils/helpers')
 // const math = require('mathjs')
 
-const evaluate = async (msg, ws, server, logger) => {
-  if (msg.gen === 5) {
-    await sleep(3000)
-  }
+const store = require('../redux/store')
 
+const evaluate = async (msg, ws, server, logger) => {
+  const state = store.getState()
+  const taskId = state.getIn(['clients', ws.id, 'taskId'])
+  const evaluatorId = state.getIn(['tasks', taskId, 'evaluatorId'])
   server.clients.forEach(client => {
-    if (client !== ws && client.readyState === WebSocket.OPEN) {
+    if (client.id === evaluatorId && client.readyState === WebSocket.OPEN) {
+      msg.taskId = taskId
       client.send(JSON.stringify(msg))
     }
   })
-  // const { data } = msg
-  // const y = math.sum(data)
-  // const res = {
-  //   type: 'evaluated',
-  //   data: y,
-  // }
-  // ws.send(JSON.stringify(res))
-  // logger.debug(`evaluate: ${data}`)
 }
 
 const evaluated = (msg, ws, server, logger) => {
+  const { taskId } = msg
+  const state = store.getState()
+  const algorithmId = state.getIn(['tasks', taskId, 'algorithmId'])
   server.clients.forEach(client => {
-    if (client !== ws && client.readyState === WebSocket.OPEN) {
+    if (client.id === algorithmId && client.readyState === WebSocket.OPEN) {
+      delete msg.taskId
       client.send(JSON.stringify(msg))
     }
   })

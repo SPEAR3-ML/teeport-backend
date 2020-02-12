@@ -37,12 +37,16 @@ const reducer = (state = initialState, action) => {
       task.algorithmId = algorithmId
       task.evaluatorId = evaluatorId
       task.createdAt = Date.now()
-      const patch = {
-        tasks: {
-          [id]: task,
-        },
-      }
-      return state.mergeDeep(patch)
+      return state.withMutations(prev => {
+        let evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
+        if (!evalTaskIds) {
+          evalTaskIds = []
+        }
+        evalTaskIds.push(id)
+        prev.setIn(['tasks', id], fromJS(task))
+        prev.setIn(['clients', algorithmId, 'taskId'], id)
+        prev.setIn(['clients', evaluatorId, 'taskId'], fromJS(evalTaskIds))
+      })
     }
     case UPDATE_TASK: {
       const patch = {
