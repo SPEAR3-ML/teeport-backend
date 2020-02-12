@@ -28,10 +28,7 @@ const evaluated = (msg, ws, server, logger) => {
   })
 }
 
-const done = evaluated
-
 module.exports = {
   evaluate,
   evaluated,
-  done,
 }

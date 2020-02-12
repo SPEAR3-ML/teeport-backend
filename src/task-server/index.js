@@ -1,7 +1,7 @@
 const WebSocket = require('ws')
 const {
   connect, disconnect,
-  evaluate, evaluated, done,
+  evaluate, evaluated,
   monitor,
   getTasks, newTask, pauseTask, startTask, stopTask, completeTask,
   getClients,
@@ -30,9 +30,6 @@ class TaskServer {
             break
           case 'evaluated':
             evaluated(msg, ws, server, logger)
-            break
-          case 'done':
-            done(msg, ws, server, logger)
             break
           case 'monitor':
             monitor(msg, ws, server, logger)
