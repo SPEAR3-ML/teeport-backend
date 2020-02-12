@@ -1,8 +1,9 @@
-const { fromJS } = require('immutable')
+const { List, fromJS } = require('immutable')
 
 const {
   CONNECT, DISCONNECT,
   NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK,
+  EVALUATE, EVALUATED,
 } = require('./actionTypes')
 const { clientDef, taskDef } = require('./defs')
 
@@ -90,6 +91,30 @@ const reducer = (state = initialState, action) => {
         if (status === 'running') {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
           prev.setIn(['tasks', action.id, 'status'], 'completed')
+        }
+      })
+    }
+    case EVALUATE: {
+      return state.withMutations(prev => {
+        const { taskId, data: X } = action
+        const status = prev.getIn(['tasks', taskId, 'status'])
+        const pending = prev.getIn(['tasks', taskId, 'pending'])
+        if (['init', 'paused', 'running'].includes(status)) {
+          prev.setIn(['tasks', taskId, 'pending', pending.size], fromJS([X, null]))
+        }
+      })
+    }
+    case EVALUATED: {
+      return state.withMutations(prev => {
+        const { taskId, data: Y } = action
+        const status = prev.getIn(['tasks', taskId, 'status'])
+        const pending = prev.getIn(['tasks', taskId, 'pending'])
+        const XList = prev.getIn(['tasks', taskId, 'pending', pending.size - 1, 0])
+        const XYList = List().push(XList).push(fromJS(Y))
+        if (['init', 'paused', 'running'].includes(status)) {
+          const history = prev.getIn(['tasks', taskId, 'history'])
+          prev.setIn(['tasks', taskId, 'history', history.size], XYList)
+          prev.deleteIn(['tasks', taskId, 'pending', 0])
         }
       })
     }

@@ -1,3 +1,4 @@
+const WebSocket = require('ws')
 const sid = require('shortid')
 const generate = require('project-name-generator')
 
@@ -51,7 +52,26 @@ const startTask = (msg, ws, server, logger) => {
   const { id } = msg
   store.dispatch(startTaskAction(id))
 
-  logger.debug(`task ${id} started`)
+  // Process the pending queue
+  const state = store.getState()
+  const pending = state.getIn(['tasks', id, 'pending'])
+  if (pending.size) {
+    const evaluatorId = state.getIn(['tasks', id, 'evaluatorId'])
+    server.clients.forEach(client => {
+      if (client.id === evaluatorId && client.readyState === WebSocket.OPEN) {
+        pending.forEach(point => {
+          const msg = {
+            type: 'evaluate',
+            data: point.get(0).toJS(),
+            taskId: id,
+          }
+          client.send(JSON.stringify(msg))
+        })
+      }
+    })
+  }
+
+  logger.debug(`task ${id} has been started`)
 }
 
 const stopTask = (msg, ws, server, logger) => {

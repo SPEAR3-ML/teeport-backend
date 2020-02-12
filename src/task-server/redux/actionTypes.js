@@ -6,6 +6,8 @@ const PAUSE_TASK = 'PAUSE_TASK'
 const START_TASK = 'START_TASK'
 const STOP_TASK = 'STOP_TASK'
 const COMPLETE_TASK = 'COMPLETE_TASK'
+const EVALUATE = 'EVALUATE'
+const EVALUATED = 'EVALUATED'
 
 module.exports = {
   CONNECT,
@@ -16,4 +18,6 @@ module.exports = {
   START_TASK,
   STOP_TASK,
   COMPLETE_TASK,
+  EVALUATE,
+  EVALUATED,
 }

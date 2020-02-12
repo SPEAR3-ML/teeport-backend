@@ -17,6 +17,7 @@ const taskDef = () => {
     status: 'init',
     algorithmId: null,
     evaluatorId: null,
+    pending: [],
     history: [],
     configs: {},
   }
