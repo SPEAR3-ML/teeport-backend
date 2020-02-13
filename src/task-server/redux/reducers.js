@@ -41,12 +41,12 @@ const reducer = (state = initialState, action) => {
       return state.withMutations(prev => {
         let evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
         if (!evalTaskIds) {
-          evalTaskIds = []
+          evalTaskIds = List()
         }
-        evalTaskIds.push(id)
+        evalTaskIds = evalTaskIds.push(id)
         prev.setIn(['tasks', id], fromJS(task))
         prev.setIn(['clients', algorithmId, 'taskId'], id)
-        prev.setIn(['clients', evaluatorId, 'taskId'], fromJS(evalTaskIds))
+        prev.setIn(['clients', evaluatorId, 'taskId'], evalTaskIds)
       })
     }
     case UPDATE_TASK: {
@@ -79,18 +79,30 @@ const reducer = (state = initialState, action) => {
     case STOP_TASK: {
       return state.withMutations(prev => {
         const status = prev.getIn(['tasks', action.id, 'status'])
+        const algorithmId = prev.getIn(['tasks', action.id, 'algorithmId'])
+        const evaluatorId = prev.getIn(['tasks', action.id, 'evaluatorId'])
+        const evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
+        const filteredEvalTaskIds = evalTaskIds.filter(item => item !== action.id)
         if (['init', 'paused', 'running'].includes(status)) {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
           prev.setIn(['tasks', action.id, 'status'], 'cancelled')
+          prev.setIn(['clients', algorithmId, 'taskId'], null)
+          prev.setIn(['clients', evaluatorId, 'taskId'], filteredEvalTaskIds)
         }
       })
     }
     case COMPLETE_TASK: {
       return state.withMutations(prev => {
         const status = prev.getIn(['tasks', action.id, 'status'])
+        const algorithmId = prev.getIn(['tasks', action.id, 'algorithmId'])
+        const evaluatorId = prev.getIn(['tasks', action.id, 'evaluatorId'])
+        const evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
+        const filteredEvalTaskIds = evalTaskIds.filter(item => item !== action.id)
         if (status === 'running') {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
           prev.setIn(['tasks', action.id, 'status'], 'completed')
+          prev.setIn(['clients', algorithmId, 'taskId'], null)
+          prev.setIn(['clients', evaluatorId, 'taskId'], filteredEvalTaskIds)
         }
       })
     }
