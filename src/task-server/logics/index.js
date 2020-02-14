@@ -1,7 +1,10 @@
 const { connect, disconnect } = require('./connect')
 const { evaluate, evaluated } = require('./evaluate')
 const monitor = require('./monitor')
-const { getTasks, newTask, pauseTask, startTask, stopTask, completeTask } = require('./task')
+const {
+  getTasks, getTask,
+  newTask, pauseTask, startTask, stopTask, completeTask,
+} = require('./task')
 const { getClients } = require('./client')
 
 module.exports = {
@@ -11,6 +14,7 @@ module.exports = {
   evaluated,
   monitor,
   getTasks,
+  getTask,
   newTask,
   pauseTask,
   startTask,

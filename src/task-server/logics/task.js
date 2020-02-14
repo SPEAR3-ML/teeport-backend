@@ -13,6 +13,7 @@ const {
 } = require('../redux/actions')
 const {
   selectTasks,
+  selectTask,
 } = require('../redux/selectors')
 
 const getTasks = (msg, ws, server, logger) => {
@@ -25,6 +26,17 @@ const getTasks = (msg, ws, server, logger) => {
   const res = {
     type: 'tasks',
     tasks: sortedTasks,
+  }
+  ws.send(JSON.stringify(res))
+}
+
+const getTask = (msg, ws, server, logger) => {
+  const { id } = msg
+  const task = selectTask(id)(store.getState())
+  task.id = id
+  const res = {
+    type: 'task',
+    task,
   }
   ws.send(JSON.stringify(res))
 }
@@ -104,6 +116,7 @@ const completeTask = (msg, ws, server, logger) => {
 
 module.exports = {
   getTasks,
+  getTask,
   newTask,
   pauseTask,
   startTask,

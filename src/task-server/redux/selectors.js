@@ -11,7 +11,14 @@ const selectTasks = createSelector(
   [
     state => state.get('tasks'),
   ],
-  clients => clients.toJS(),
+  tasks => tasks.toJS(),
 )
 
-module.exports = { selectClients, selectTasks }
+const selectTask = taskId => createSelector(
+  [
+    state => state.getIn(['tasks', taskId]),
+  ],
+  task => task.toJS(),
+)
+
+module.exports = { selectClients, selectTasks, selectTask }
