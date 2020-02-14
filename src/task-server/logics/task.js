@@ -32,11 +32,19 @@ const newTask = (msg, ws, server, logger) => {
   }
   store.dispatch(newTaskAction(id, name, algorithmId, evaluatorId))
 
-  const res = {
+  const res = JSON.stringify({
     type: 'taskCreated',
     id,
-  }
-  ws.send(JSON.stringify(res))
+  })
+  ws.send(res)
+
+  const state = store.getState()
+  server.clients.forEach(client => {
+    const type = state.getIn(['clients', client.id, 'type'])
+    if (type === 'manager') {
+      client.send(res)
+    }
+  })
 
   logger.debug(`task ${id} has been created`)
 }
