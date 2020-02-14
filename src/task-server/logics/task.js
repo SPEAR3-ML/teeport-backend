@@ -1,6 +1,7 @@
 const WebSocket = require('ws')
 const sid = require('shortid')
 const generate = require('project-name-generator')
+const _ = require('lodash')
 
 const store = require('../redux/store')
 const {
@@ -16,9 +17,14 @@ const {
 
 const getTasks = (msg, ws, server, logger) => {
   const tasks = selectTasks(store.getState())
+  const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
+    return _.assign(task, { id: taskId })
+  }).sort((t1, t2) => {
+    return t2.createdAt - t1.createdAt
+  })
   const res = {
     type: 'tasks',
-    tasks,
+    tasks: sortedTasks,
   }
   ws.send(JSON.stringify(res))
 }
