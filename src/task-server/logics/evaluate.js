@@ -11,30 +11,36 @@ const {
 const evaluate = async (msg, ws, server, logger) => {
   const state = store.getState()
   const taskId = state.getIn(['clients', ws.id, 'taskId'])
+  msg.taskId = taskId
   const evaluatorId = state.getIn(['tasks', taskId, 'evaluatorId'])
   const taskStatus = state.getIn(['tasks', taskId, 'status'])
   server.clients.forEach(client => {
+    const clientType = state.getIn(['clients', client.id, 'type'])
+    const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
     if (client.id === evaluatorId && client.readyState === WebSocket.OPEN) {
       if (taskStatus === 'running') {
-        msg.taskId = taskId
         client.send(JSON.stringify(msg))
       }
-
       store.dispatch(evaluateAction(taskId, msg.data))
+    } else if (clientType === 'monitor' && clientTaskId === taskId) {
+      client.send(JSON.stringify(msg))
     }
   })
 }
 
 const evaluated = (msg, ws, server, logger) => {
   const { taskId } = msg
+  delete msg.taskId
   const state = store.getState()
   const algorithmId = state.getIn(['tasks', taskId, 'algorithmId'])
   server.clients.forEach(client => {
+    const clientType = state.getIn(['clients', client.id, 'type'])
+    const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
     if (client.id === algorithmId && client.readyState === WebSocket.OPEN) {
-      delete msg.taskId
       client.send(JSON.stringify(msg))
-
       store.dispatch(evaluatedAction(taskId, msg.data))
+    } else if (clientType === 'monitor' && clientTaskId === taskId) {
+      client.send(JSON.stringify(msg))
     }
   })
 }
