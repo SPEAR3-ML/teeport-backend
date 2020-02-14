@@ -17,9 +17,10 @@ const reducer = (state = initialState, action) => {
     case CONNECT: {
       const client = clientDef()
       const { id, client: _client } = action
-      const { name, type } = _client
+      const { name, type, taskId } = _client
       client.name = name
       client.type = type
+      client.taskId = taskId
       const patch = {
         clients: {
           [id]: client,

@@ -10,7 +10,7 @@ const {
 
 const connect = (req, ws, server, logger) => {
   ws.id = sid.generate()
-  const { query: { name: _name, type: _type } } = parse(req.url, true)
+  const { query: { name: _name, type: _type, taskId: _taskId } } = parse(req.url, true)
   let name = _name
   if (!name) {
     name = generate().dashed
@@ -19,7 +19,11 @@ const connect = (req, ws, server, logger) => {
   if (!type) {
     type = null
   }
-  store.dispatch(connectAction(ws.id, name, type))
+  let taskId = _taskId
+  if (!taskId) {
+    taskId = null
+  }
+  store.dispatch(connectAction(ws.id, name, type, taskId))
 
   const msg = {
     type: 'hello',

@@ -4,12 +4,13 @@ const {
   EVALUATE, EVALUATED,
 } = require('./actionTypes')
 
-const connect = (id, name, type) => ({
+const connect = (id, name, type, taskId) => ({
   type: CONNECT,
   id,
   client: {
     name,
     type,
+    taskId,
   },
 })
 
