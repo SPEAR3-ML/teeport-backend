@@ -16,6 +16,16 @@ const {
   selectTask,
 } = require('../redux/selectors')
 
+const sendToManagers = (server, store) => res => {
+  const state = store.getState()
+  server.clients.forEach(client => {
+    const type = state.getIn(['clients', client.id, 'type'])
+    if (type === 'manager') {
+      client.send(res)
+    }
+  })
+}
+
 const getTasks = (msg, ws, server, logger) => {
   const tasks = selectTasks(store.getState())
   const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
@@ -56,13 +66,7 @@ const newTask = (msg, ws, server, logger) => {
   })
   ws.send(res)
 
-  const state = store.getState()
-  server.clients.forEach(client => {
-    const type = state.getIn(['clients', client.id, 'type'])
-    if (type === 'manager') {
-      client.send(res)
-    }
-  })
+  sendToManagers(server, store)(res)
 
   logger.debug(`task ${id} has been created`)
 }
@@ -71,7 +75,13 @@ const pauseTask = (msg, ws, server, logger) => {
   const { id } = msg
   store.dispatch(pauseTaskAction(id))
 
-  logger.debug(`task ${id} has been paused`)
+  const notif = JSON.stringify({
+    type: 'pauseTask',
+    id,
+  })
+  sendToManagers(server, store)(notif)
+
+  logger.debug(`try to pause task ${id}`)
 }
 
 const startTask = (msg, ws, server, logger) => {
@@ -97,21 +107,39 @@ const startTask = (msg, ws, server, logger) => {
     })
   }
 
-  logger.debug(`task ${id} has been started`)
+  const notif = JSON.stringify({
+    type: 'startTask',
+    id,
+  })
+  sendToManagers(server, store)(notif)
+
+  logger.debug(`try to start task ${id}`)
 }
 
 const stopTask = (msg, ws, server, logger) => {
   const { id } = msg
   store.dispatch(stopTaskAction(id))
 
-  logger.debug(`task ${id} has been terminated`)
+  const notif = JSON.stringify({
+    type: 'stopTask',
+    id,
+  })
+  sendToManagers(server, store)(notif)
+
+  logger.debug(`try to terminate task ${id}`)
 }
 
 const completeTask = (msg, ws, server, logger) => {
   const { id } = msg
   store.dispatch(completeTaskAction(id))
 
-  logger.debug(`task ${id} has been completed`)
+  const notif = JSON.stringify({
+    type: 'completeTask',
+    id,
+  })
+  sendToManagers(server, store)(notif)
+
+  logger.debug(`try to complete task ${id}`)
 }
 
 module.exports = {
