@@ -26,6 +26,17 @@ const sendToManagers = (server, store) => res => {
   })
 }
 
+const sendToMonitors = (server, store) => (taskId, res) => {
+  const state = store.getState()
+  server.clients.forEach(client => {
+    const clientType = state.getIn(['clients', client.id, 'type'])
+    const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
+    if (clientType === 'monitor' && clientTaskId === taskId) {
+      client.send(res)
+    }
+  })
+}
+
 const getTasks = (msg, ws, server, logger) => {
   const tasks = selectTasks(store.getState())
   const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
@@ -80,6 +91,7 @@ const pauseTask = (msg, ws, server, logger) => {
     id,
   })
   sendToManagers(server, store)(notif)
+  sendToMonitors(server, store)(id, notif)
 
   logger.debug(`try to pause task ${id}`)
 }
@@ -112,6 +124,7 @@ const startTask = (msg, ws, server, logger) => {
     id,
   })
   sendToManagers(server, store)(notif)
+  sendToMonitors(server, store)(id, notif)
 
   logger.debug(`try to start task ${id}`)
 }
@@ -125,6 +138,7 @@ const stopTask = (msg, ws, server, logger) => {
     id,
   })
   sendToManagers(server, store)(notif)
+  sendToMonitors(server, store)(id, notif)
 
   logger.debug(`try to terminate task ${id}`)
 }
@@ -138,6 +152,7 @@ const completeTask = (msg, ws, server, logger) => {
     id,
   })
   sendToManagers(server, store)(notif)
+  sendToMonitors(server, store)(id, notif)
 
   logger.debug(`try to complete task ${id}`)
 }
