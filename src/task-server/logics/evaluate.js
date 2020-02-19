@@ -40,11 +40,11 @@ const evaluated = (msg, ws, server, logger) => {
     const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
     if (client.id === algorithmId && client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(msg))
-      store.dispatch(evaluatedAction(taskId, msg.data))
     } else if (clientType === 'monitor' && clientTaskId === taskId) {
       client.send(JSON.stringify(msg))
     }
   })
+  store.dispatch(evaluatedAction(taskId, msg.data))
 }
 
 module.exports = {
