@@ -37,6 +37,17 @@ const sendToMonitors = (server, store) => (taskId, res) => {
   })
 }
 
+const sendToAlgorithm = (server, store) => (taskId, res) => {
+  const state = store.getState()
+  server.clients.forEach(client => {
+    const clientType = state.getIn(['clients', client.id, 'type'])
+    const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
+    if (clientType === 'algorithm' && clientTaskId === taskId) {
+      client.send(res)
+    }
+  })
+}
+
 const getTasks = (msg, ws, server, logger) => {
   const tasks = selectTasks(store.getState())
   const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
@@ -131,12 +142,13 @@ const startTask = (msg, ws, server, logger) => {
 
 const stopTask = (msg, ws, server, logger) => {
   const { id } = msg
-  store.dispatch(stopTaskAction(id))
-
   const notif = JSON.stringify({
     type: 'stopTask',
     id,
   })
+  sendToAlgorithm(server, store)(id, notif)
+  store.dispatch(stopTaskAction(id))
+
   sendToManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
 
