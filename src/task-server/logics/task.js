@@ -69,6 +69,7 @@ const getTask = (msg, ws, server, logger) => {
   const res = {
     type: 'task',
     task,
+    timestamp: Date.now(),
   }
   ws.send(JSON.stringify(res))
 }

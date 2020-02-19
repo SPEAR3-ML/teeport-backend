@@ -12,6 +12,7 @@ const evaluate = async (msg, ws, server, logger) => {
   const state = store.getState()
   const taskId = state.getIn(['clients', ws.id, 'taskId'])
   msg.taskId = taskId
+  msg.timestamp = Date.now()
   const evaluatorId = state.getIn(['tasks', taskId, 'evaluatorId'])
   const taskStatus = state.getIn(['tasks', taskId, 'status'])
   server.clients.forEach(client => {
@@ -31,6 +32,7 @@ const evaluate = async (msg, ws, server, logger) => {
 const evaluated = (msg, ws, server, logger) => {
   const { taskId } = msg
   delete msg.taskId
+  msg.timestamp = Date.now()
   const state = store.getState()
   const algorithmId = state.getIn(['tasks', taskId, 'algorithmId'])
   server.clients.forEach(client => {
