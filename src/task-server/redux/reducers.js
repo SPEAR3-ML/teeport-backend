@@ -121,8 +121,7 @@ const reducer = (state = initialState, action) => {
       return state.withMutations(prev => {
         const { taskId, data: Y } = action
         const status = prev.getIn(['tasks', taskId, 'status'])
-        const pending = prev.getIn(['tasks', taskId, 'pending'])
-        const XList = prev.getIn(['tasks', taskId, 'pending', pending.size - 1, 0])
+        const XList = prev.getIn(['tasks', taskId, 'pending', 0, 0])
         const XYList = List().push(XList).push(fromJS(Y))
         if (['init', 'paused', 'running'].includes(status)) {
           const history = prev.getIn(['tasks', taskId, 'history'])
