@@ -2,6 +2,7 @@ const WebSocket = require('ws')
 const {
   connect, disconnect,
   evaluate, evaluated,
+  process, processed,
   monitor,
   getTasks, getTask,
   newTask, pauseTask, startTask, stopTask, completeTask,
@@ -22,7 +23,7 @@ class TaskServer {
     const server = this.server = new WebSocket.Server({ port })
 
     server.on('connection', (ws, req) => {
-      ws.on('message', async (message) => {
+      ws.on('message', message => {
         const msg = JSON.parse(message)
         const { type } = msg
         switch (type) {
@@ -31,6 +32,12 @@ class TaskServer {
             break
           case 'evaluated':
             evaluated(msg, ws, server, logger)
+            break
+          case 'process':
+            process(msg, ws, server, logger)
+            break
+          case 'processed':
+            processed(msg, ws, server, logger)
             break
           case 'monitor':
             monitor(msg, ws, server, logger)
@@ -62,10 +69,6 @@ class TaskServer {
           default:
             logger.warn(`received: ${message}`)
         }
-        // await sleep(3000)
-        // ws.send(JSON.stringify({
-        //   msg,
-        // }))
       })
 
       ws.on('close', (code, reason) => {
@@ -73,7 +76,6 @@ class TaskServer {
       })
 
       connect(req, ws, server, logger)
-      // ws.send('hello there')
     })
   }
 }
