@@ -16,11 +16,11 @@ const {
   selectTask,
 } = require('../redux/selectors')
 
-const sendToManagers = (server, store) => res => {
+const sendToTaskManagers = (server, store) => res => {
   const state = store.getState()
   server.clients.forEach(client => {
     const type = state.getIn(['clients', client.id, 'type'])
-    if (type === 'manager') {
+    if (type === 'taskManager') {
       client.send(res)
     }
   })
@@ -89,7 +89,7 @@ const newTask = (msg, ws, server, logger) => {
   })
   ws.send(res)
 
-  sendToManagers(server, store)(res)
+  sendToTaskManagers(server, store)(res)
 
   logger.debug(`task ${id} has been created`)
 }
@@ -102,7 +102,7 @@ const pauseTask = (msg, ws, server, logger) => {
     type: 'pauseTask',
     id,
   })
-  sendToManagers(server, store)(notif)
+  sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
 
   logger.debug(`try to pause task ${id}`)
@@ -135,7 +135,7 @@ const startTask = (msg, ws, server, logger) => {
     type: 'startTask',
     id,
   })
-  sendToManagers(server, store)(notif)
+  sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
 
   logger.debug(`try to start task ${id}`)
@@ -150,7 +150,7 @@ const stopTask = (msg, ws, server, logger) => {
   sendToAlgorithm(server, store)(id, notif)
   store.dispatch(stopTaskAction(id))
 
-  sendToManagers(server, store)(notif)
+  sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
 
   logger.debug(`try to terminate task ${id}`)
@@ -164,7 +164,7 @@ const completeTask = (msg, ws, server, logger) => {
     type: 'completeTask',
     id,
   })
-  sendToManagers(server, store)(notif)
+  sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
 
   logger.debug(`try to complete task ${id}`)
