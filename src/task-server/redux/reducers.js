@@ -21,6 +21,7 @@ const reducer = (state = initialState, action) => {
       client.name = name
       client.type = type
       client.taskId = taskId
+      client.connectedAt = Date.now()
       const patch = {
         clients: {
           [id]: client,

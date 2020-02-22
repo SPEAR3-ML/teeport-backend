@@ -3,6 +3,7 @@ const clientDef = () => {
     name: null,
     type: null,
     taskId: null,
+    connectedAt: null,
     configs: {},
   }
 }
