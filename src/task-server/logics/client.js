@@ -4,6 +4,7 @@ const store = require('../redux/store')
 const {
   selectClients,
 } = require('../redux/selectors')
+const { closeSocket } = require('../../utils/helpers')
 
 const getClients = (msg, ws, server, logger) => {
   const clients = selectClients(store.getState())
@@ -19,6 +20,11 @@ const getClients = (msg, ws, server, logger) => {
   ws.send(JSON.stringify(res))
 }
 
+const closeClient = (msg, ws, server, logger) => {
+  closeSocket(server)(msg.id)
+}
+
 module.exports = {
   getClients,
+  closeClient,
 }

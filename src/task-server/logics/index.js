@@ -6,7 +6,10 @@ const {
   getTasks, getTask,
   newTask, pauseTask, startTask, stopTask, completeTask,
 } = require('./task')
-const { getClients } = require('./client')
+const {
+  getClients,
+  closeClient,
+} = require('./client')
 
 module.exports = {
   connect,
@@ -24,4 +27,5 @@ module.exports = {
   stopTask,
   completeTask,
   getClients,
+  closeClient,
 }
