@@ -42,10 +42,19 @@ const sendToAlgorithm = (server, store) => (taskId, res) => {
   })
 }
 
+const closeSocket = server => id => {
+  server.clients.forEach(client => {
+    if (client.id === id) {
+      client.close()
+    }
+  })
+}
+
 module.exports = {
   sleep,
   sendToAlgorithm,
   sendToMonitors,
   sendToTaskManagers,
   sendToClientManagers,
+  closeSocket,
 }
