@@ -1,7 +1,7 @@
 const { List, fromJS } = require('immutable')
 
 const {
-  CONNECT, DISCONNECT,
+  CONNECT, DISCONNECT, RENAME_CLIENT,
   NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK,
   EVALUATE, EVALUATED,
 } = require('./actionTypes')
@@ -31,6 +31,14 @@ const reducer = (state = initialState, action) => {
     }
     case DISCONNECT: {
       return state.deleteIn(['clients', action.id])
+    }
+    case RENAME_CLIENT: {
+      return state.withMutations(prev => {
+        const client = prev.getIn(['clients', action.id])
+        if (client) {
+          prev.setIn(['clients', action.id, 'name'], action.name)
+        }
+      })
     }
     case NEW_TASK: {
       const task = taskDef()

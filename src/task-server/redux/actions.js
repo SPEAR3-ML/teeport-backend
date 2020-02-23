@@ -1,5 +1,5 @@
 const {
-  CONNECT, DISCONNECT,
+  CONNECT, DISCONNECT, RENAME_CLIENT,
   NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK,
   EVALUATE, EVALUATED,
 } = require('./actionTypes')
@@ -17,6 +17,12 @@ const connect = (id, name, type, taskId) => ({
 const disconnect = (id) => ({
   type: DISCONNECT,
   id,
+})
+
+const renameClient = (id, name) => ({
+  type: RENAME_CLIENT,
+  id,
+  name,
 })
 
 const newTask = (id, name, algorithmId, evaluatorId) => ({
@@ -70,6 +76,7 @@ const evaluated = (taskId, data) => ({
 module.exports = {
   connect,
   disconnect,
+  renameClient,
   newTask,
   updateTask,
   pauseTask,

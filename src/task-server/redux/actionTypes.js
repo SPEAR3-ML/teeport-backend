@@ -8,6 +8,7 @@ const STOP_TASK = 'STOP_TASK'
 const COMPLETE_TASK = 'COMPLETE_TASK'
 const EVALUATE = 'EVALUATE'
 const EVALUATED = 'EVALUATED'
+const RENAME_CLIENT = 'RENAME_CLIENT'
 
 module.exports = {
   CONNECT,
@@ -20,4 +21,5 @@ module.exports = {
   COMPLETE_TASK,
   EVALUATE,
   EVALUATED,
+  RENAME_CLIENT,
 }

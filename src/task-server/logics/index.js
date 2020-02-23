@@ -9,6 +9,7 @@ const {
 const {
   getClients,
   closeClient,
+  renameClient,
 } = require('./client')
 
 module.exports = {
@@ -28,4 +29,5 @@ module.exports = {
   completeTask,
   getClients,
   closeClient,
+  renameClient,
 }

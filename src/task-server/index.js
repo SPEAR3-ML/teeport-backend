@@ -7,7 +7,7 @@ const {
   getTasks, getTask,
   newTask, pauseTask, startTask, stopTask, completeTask,
   getClients,
-  closeClient,
+  closeClient, renameClient,
 } = require('./logics')
 
 class TaskServer {
@@ -69,6 +69,9 @@ class TaskServer {
             break
           case 'closeClient':
             closeClient(msg, ws, server, logger)
+            break
+          case 'renameClient':
+            renameClient(msg, ws, server, logger)
             break
           default:
             logger.warn(`received: ${message}`)

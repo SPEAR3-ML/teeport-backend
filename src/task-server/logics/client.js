@@ -4,7 +4,10 @@ const store = require('../redux/store')
 const {
   selectClients,
 } = require('../redux/selectors')
-const { closeSocket } = require('../../utils/helpers')
+const {
+  renameClient: renameClientAction,
+} = require('../redux/actions')
+const { closeSocket, sendToClientManagers } = require('../../utils/helpers')
 
 const getClients = (msg, ws, server, logger) => {
   const clients = selectClients(store.getState())
@@ -24,7 +27,20 @@ const closeClient = (msg, ws, server, logger) => {
   closeSocket(server)(msg.id)
 }
 
+const renameClient = (msg, ws, server, logger) => {
+  store.dispatch(renameClientAction(msg.clientId, msg.name))
+
+  const notif = JSON.stringify({
+    type: 'updated',
+    id: msg.clientId,
+  })
+  sendToClientManagers(server, store)(notif)
+
+  logger.debug(`client ${msg.clientId} has been renamed to ${msg.name}`)
+}
+
 module.exports = {
   getClients,
   closeClient,
+  renameClient,
 }
