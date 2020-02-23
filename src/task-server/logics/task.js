@@ -15,38 +15,11 @@ const {
   selectTasks,
   selectTask,
 } = require('../redux/selectors')
-
-const sendToTaskManagers = (server, store) => res => {
-  const state = store.getState()
-  server.clients.forEach(client => {
-    const type = state.getIn(['clients', client.id, 'type'])
-    if (type === 'taskManager') {
-      client.send(res)
-    }
-  })
-}
-
-const sendToMonitors = (server, store) => (taskId, res) => {
-  const state = store.getState()
-  server.clients.forEach(client => {
-    const clientType = state.getIn(['clients', client.id, 'type'])
-    const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
-    if (clientType === 'monitor' && clientTaskId === taskId) {
-      client.send(res)
-    }
-  })
-}
-
-const sendToAlgorithm = (server, store) => (taskId, res) => {
-  const state = store.getState()
-  server.clients.forEach(client => {
-    const clientType = state.getIn(['clients', client.id, 'type'])
-    const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
-    if (clientType === 'algorithm' && clientTaskId === taskId) {
-      client.send(res)
-    }
-  })
-}
+const {
+  sendToTaskManagers,
+  sendToMonitors,
+  sendToAlgorithm,
+} = require('../../utils/helpers')
 
 const getTasks = (msg, ws, server, logger) => {
   const tasks = selectTasks(store.getState())

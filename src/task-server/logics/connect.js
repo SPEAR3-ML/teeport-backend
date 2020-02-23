@@ -7,16 +7,7 @@ const {
   connect: connectAction,
   disconnect: disconnectAction,
 } = require('../redux/actions')
-
-const sendToClientManagers = (server, store) => res => {
-  const state = store.getState()
-  server.clients.forEach(client => {
-    const type = state.getIn(['clients', client.id, 'type'])
-    if (type === 'clientManager') {
-      client.send(res)
-    }
-  })
-}
+const { sendToClientManagers } = require('../../utils/helpers')
 
 const connect = (req, ws, server, logger) => {
   ws.id = sid.generate()
