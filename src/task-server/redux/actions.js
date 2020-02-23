@@ -1,6 +1,7 @@
 const {
   CONNECT, DISCONNECT, RENAME_CLIENT,
   NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK,
+  RENAME_TASK,
   EVALUATE, EVALUATED,
 } = require('./actionTypes')
 
@@ -61,6 +62,12 @@ const completeTask = (id, task) => ({
   id,
 })
 
+const renameTask = (id, name) => ({
+  type: RENAME_TASK,
+  id,
+  name,
+})
+
 const evaluate = (taskId, data) => ({
   type: EVALUATE,
   taskId,
@@ -83,6 +90,7 @@ module.exports = {
   startTask,
   stopTask,
   completeTask,
+  renameTask,
   evaluate,
   evaluated,
 }

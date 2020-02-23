@@ -10,6 +10,7 @@ const {
   startTask: startTaskAction,
   stopTask: stopTaskAction,
   completeTask: completeTaskAction,
+  renameTask: renameTaskAction,
 } = require('../redux/actions')
 const {
   selectTasks,
@@ -143,6 +144,18 @@ const completeTask = (msg, ws, server, logger) => {
   logger.debug(`try to complete task ${id}`)
 }
 
+const renameTask = (msg, ws, server, logger) => {
+  store.dispatch(renameTaskAction(msg.taskId, msg.name))
+
+  const notif = JSON.stringify({
+    type: 'updateTask',
+    id: msg.taskId,
+  })
+  sendToTaskManagers(server, store)(notif)
+
+  logger.debug(`task ${msg.taskId} has been renamed to ${msg.name}`)
+}
+
 module.exports = {
   getTasks,
   getTask,
@@ -151,4 +164,5 @@ module.exports = {
   startTask,
   stopTask,
   completeTask,
+  renameTask,
 }
