@@ -107,6 +107,9 @@ const reducer = (state = initialState, action) => {
         const algorithmId = prev.getIn(['tasks', action.id, 'algorithmId'])
         const evaluatorId = prev.getIn(['tasks', action.id, 'evaluatorId'])
         const evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
+        if (!evalTaskIds) {
+          return
+        }
         const filteredEvalTaskIds = evalTaskIds.filter(item => item !== action.id)
         if (status === 'running') {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
