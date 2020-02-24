@@ -86,13 +86,21 @@ const reducer = (state = initialState, action) => {
         const status = prev.getIn(['tasks', action.id, 'status'])
         const algorithmId = prev.getIn(['tasks', action.id, 'algorithmId'])
         const evaluatorId = prev.getIn(['tasks', action.id, 'evaluatorId'])
-        const evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
-        const filteredEvalTaskIds = evalTaskIds.filter(item => item !== action.id)
         if (['init', 'paused', 'running'].includes(status)) {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
           prev.setIn(['tasks', action.id, 'status'], 'cancelled')
-          prev.setIn(['clients', algorithmId, 'taskId'], null)
-          prev.setIn(['clients', evaluatorId, 'taskId'], filteredEvalTaskIds)
+          const algorithm = prev.getIn(['clients', algorithmId])
+          if (algorithm) {
+            prev.setIn(['clients', algorithmId, 'taskId'], null)
+          }
+          const evaluator = prev.getIn(['clients', evaluatorId])
+          if (evaluator) {
+            const evalTaskIds = evaluator.get('taskId')
+            if (evalTaskIds) {
+              const filteredEvalTaskIds = evalTaskIds.filter(item => item !== action.id)
+              prev.setIn(['clients', evaluatorId, 'taskId'], filteredEvalTaskIds)
+            }
+          }
         }
       })
     }
@@ -101,16 +109,21 @@ const reducer = (state = initialState, action) => {
         const status = prev.getIn(['tasks', action.id, 'status'])
         const algorithmId = prev.getIn(['tasks', action.id, 'algorithmId'])
         const evaluatorId = prev.getIn(['tasks', action.id, 'evaluatorId'])
-        const evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
-        if (!evalTaskIds) {
-          return
-        }
-        const filteredEvalTaskIds = evalTaskIds.filter(item => item !== action.id)
         if (status === 'running') {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
           prev.setIn(['tasks', action.id, 'status'], 'completed')
-          prev.setIn(['clients', algorithmId, 'taskId'], null)
-          prev.setIn(['clients', evaluatorId, 'taskId'], filteredEvalTaskIds)
+          const algorithm = prev.getIn(['clients', algorithmId])
+          if (algorithm) {
+            prev.setIn(['clients', algorithmId, 'taskId'], null)
+          }
+          const evaluator = prev.getIn(['clients', evaluatorId])
+          if (evaluator) {
+            const evalTaskIds = evaluator.get('taskId')
+            if (evalTaskIds) {
+              const filteredEvalTaskIds = evalTaskIds.filter(item => item !== action.id)
+              prev.setIn(['clients', evaluatorId, 'taskId'], filteredEvalTaskIds)
+            }
+          }
         }
       })
     }
