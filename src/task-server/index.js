@@ -4,7 +4,7 @@ const {
   evaluate, evaluated,
   process, processed,
   monitor,
-  getTasks, getTask,
+  getTasks, getTasksOverview, getTask,
   newTask, pauseTask, startTask, stopTask, completeTask, renameTask,
   getClients,
   closeClient, renameClient,
@@ -45,6 +45,9 @@ class TaskServer {
             break
           case 'getTasks':
             getTasks(msg, ws, server, logger)
+            break
+          case 'getTasksOverview':
+            getTasksOverview(msg, ws, server, logger)
             break
           case 'getTask':
             getTask(msg, ws, server, logger)

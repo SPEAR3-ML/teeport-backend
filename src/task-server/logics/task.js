@@ -36,6 +36,23 @@ const getTasks = (msg, ws, server, logger) => {
   ws.send(JSON.stringify(res))
 }
 
+const getTasksOverview = (msg, ws, server, logger) => {
+  const tasks = selectTasks(store.getState())
+  const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
+    const taskAbstract = _.assign(task, { id: taskId })
+    delete taskAbstract.history
+    delete taskAbstract.pending
+    return taskAbstract
+  }).sort((t1, t2) => {
+    return t2.createdAt - t1.createdAt
+  })
+  const res = {
+    type: 'tasksOverview',
+    tasks: sortedTasks,
+  }
+  ws.send(JSON.stringify(res))
+}
+
 const getTask = (msg, ws, server, logger) => {
   const { id } = msg
   const task = selectTask(id)(store.getState())
@@ -158,6 +175,7 @@ const renameTask = (msg, ws, server, logger) => {
 
 module.exports = {
   getTasks,
+  getTasksOverview,
   getTask,
   newTask,
   pauseTask,
