@@ -22,12 +22,7 @@ const reducer = (state = initialState, action) => {
       client.type = type
       client.taskId = taskId
       client.connectedAt = Date.now()
-      const patch = {
-        clients: {
-          [id]: client,
-        },
-      }
-      return state.mergeDeep(patch)
+      return state.setIn(['clients', id], fromJS(client))
     }
     case DISCONNECT: {
       return state.deleteIn(['clients', action.id])
