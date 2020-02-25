@@ -18,7 +18,7 @@ const selectTask = taskId => createSelector(
   [
     state => state.getIn(['tasks', taskId]),
   ],
-  task => task.toJS(),
+  task => task ? task.toJS() : {},
 )
 
 module.exports = { selectClients, selectTasks, selectTask }

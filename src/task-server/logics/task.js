@@ -11,6 +11,9 @@ const {
   stopTask: stopTaskAction,
   completeTask: completeTaskAction,
   renameTask: renameTaskAction,
+  archiveTask: archiveTaskAction,
+  unarchiveTask: unarchiveTaskAction,
+  deleteTask: deleteTaskAction,
 } = require('../redux/actions')
 const {
   selectTasks,
@@ -173,6 +176,42 @@ const renameTask = (msg, ws, server, logger) => {
   logger.debug(`task ${msg.taskId} has been renamed to ${msg.name}`)
 }
 
+const archiveTask = (msg, ws, server, logger) => {
+  store.dispatch(archiveTaskAction(msg.id))
+
+  const notif = JSON.stringify({
+    type: 'updateTask',
+    id: msg.id,
+  })
+  sendToTaskManagers(server, store)(notif)
+
+  logger.debug(`try to archive task ${msg.id}`)
+}
+
+const unarchiveTask = (msg, ws, server, logger) => {
+  store.dispatch(unarchiveTaskAction(msg.id))
+
+  const notif = JSON.stringify({
+    type: 'updateTask',
+    id: msg.id,
+  })
+  sendToTaskManagers(server, store)(notif)
+
+  logger.debug(`try to unarchive task ${msg.id}`)
+}
+
+const deleteTask = (msg, ws, server, logger) => {
+  store.dispatch(deleteTaskAction(msg.id))
+
+  const notif = JSON.stringify({
+    type: 'updateTask',
+    id: msg.id,
+  })
+  sendToTaskManagers(server, store)(notif)
+
+  logger.debug(`try to delete task ${msg.id}`)
+}
+
 module.exports = {
   getTasks,
   getTasksOverview,
@@ -183,4 +222,7 @@ module.exports = {
   stopTask,
   completeTask,
   renameTask,
+  archiveTask,
+  unarchiveTask,
+  deleteTask,
 }
