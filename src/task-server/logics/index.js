@@ -8,7 +8,7 @@ const {
   archiveTask, unarchiveTask, deleteTask,
 } = require('./task')
 const {
-  getClients,
+  getClients, getClient,
   closeClient,
   renameClient,
 } = require('./client')
@@ -34,6 +34,7 @@ module.exports = {
   unarchiveTask,
   deleteTask,
   getClients,
+  getClient,
   closeClient,
   renameClient,
 }

@@ -2,7 +2,7 @@ const _ = require('lodash')
 
 const store = require('../redux/store')
 const {
-  selectClients,
+  selectClients, selectClient,
 } = require('../redux/selectors')
 const {
   renameClient: renameClientAction,
@@ -19,6 +19,18 @@ const getClients = (msg, ws, server, logger) => {
   const res = {
     type: 'clients',
     clients: sortedClients,
+  }
+  ws.send(JSON.stringify(res))
+}
+
+const getClient = (msg, ws, server, logger) => {
+  const { id } = msg
+  const client = selectClient(id)(store.getState())
+  client.id = id
+  const res = {
+    type: 'client',
+    client,
+    timestamp: Date.now(),
   }
   ws.send(JSON.stringify(res))
 }
@@ -41,6 +53,7 @@ const renameClient = (msg, ws, server, logger) => {
 
 module.exports = {
   getClients,
+  getClient,
   closeClient,
   renameClient,
 }

@@ -79,11 +79,14 @@ const newTask = (msg, ws, server, logger) => {
 
   const res = JSON.stringify({
     type: 'taskCreated',
+    algorithmId,
+    evaluatorId,
     id,
   })
   ws.send(res)
 
   sendToTaskManagers(server, store)(res)
+  sendToAlgorithm(server, store)(id, res)
 
   logger.debug(`task ${id} has been created`)
 }
@@ -104,10 +107,12 @@ const pauseTask = (msg, ws, server, logger) => {
 
 const startTask = (msg, ws, server, logger) => {
   const { id } = msg
+  const state = store.getState()
+  const status = state.getIn(['tasks', id, 'status']) // save for later
+  
   store.dispatch(startTaskAction(id))
 
   // Process the pending queue
-  const state = store.getState()
   const pending = state.getIn(['tasks', id, 'pending'])
   if (pending.size) {
     const evaluatorId = state.getIn(['tasks', id, 'evaluatorId'])
@@ -131,6 +136,9 @@ const startTask = (msg, ws, server, logger) => {
   })
   sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
+  if (status === 'init') { // new start
+    sendToAlgorithm(server, store)(id, notif)
+  }
 
   logger.debug(`try to start task ${id}`)
 }

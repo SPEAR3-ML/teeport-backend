@@ -7,6 +7,13 @@ const selectClients = createSelector(
   clients => clients.toJS(),
 )
 
+const selectClient = clientId => createSelector(
+  [
+    state => state.getIn(['clients', clientId]),
+  ],
+  client => client ? client.toJS() : {},
+)
+
 const selectTasks = createSelector(
   [
     state => state.get('tasks'),
@@ -21,4 +28,4 @@ const selectTask = taskId => createSelector(
   task => task ? task.toJS() : {},
 )
 
-module.exports = { selectClients, selectTasks, selectTask }
+module.exports = { selectClients, selectClient, selectTasks, selectTask }
