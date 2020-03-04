@@ -26,12 +26,12 @@ const renameClient = (id, name) => ({
   name,
 })
 
-const newTask = (id, name, algorithmId, evaluatorId) => ({
+const newTask = (id, name, optimizerId, evaluatorId) => ({
   type: NEW_TASK,
   id,
   task: {
     name,
-    algorithmId,
+    optimizerId,
     evaluatorId,
   },
 })

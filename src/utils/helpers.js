@@ -31,12 +31,12 @@ const sendToMonitors = (server, store) => (taskId, res) => {
   })
 }
 
-const sendToAlgorithm = (server, store) => (taskId, res) => {
+const sendToOptimizer = (server, store) => (taskId, res) => {
   const state = store.getState()
   server.clients.forEach(client => {
     const clientType = state.getIn(['clients', client.id, 'type'])
     const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
-    if (clientType === 'algorithm' && clientTaskId === taskId) {
+    if (clientType === 'optimizer' && clientTaskId === taskId) {
       client.send(res)
     }
   })
@@ -52,7 +52,7 @@ const closeSocket = server => id => {
 
 module.exports = {
   sleep,
-  sendToAlgorithm,
+  sendToOptimizer,
   sendToMonitors,
   sendToTaskManagers,
   sendToClientManagers,

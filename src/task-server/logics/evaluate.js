@@ -34,11 +34,11 @@ const evaluated = (msg, ws, server, logger) => {
   delete msg.taskId
   msg.timestamp = Date.now()
   const state = store.getState()
-  const algorithmId = state.getIn(['tasks', taskId, 'algorithmId'])
+  const optimizerId = state.getIn(['tasks', taskId, 'optimizerId'])
   server.clients.forEach(client => {
     const clientType = state.getIn(['clients', client.id, 'type'])
     const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
-    if (client.id === algorithmId && client.readyState === WebSocket.OPEN) {
+    if (client.id === optimizerId && client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(msg))
     } else if (clientType === 'monitor' && clientTaskId === taskId) {
       client.send(JSON.stringify(msg))

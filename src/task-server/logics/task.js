@@ -22,7 +22,7 @@ const {
 const {
   sendToTaskManagers,
   sendToMonitors,
-  sendToAlgorithm,
+  sendToOptimizer,
 } = require('../../utils/helpers')
 
 const getTasks = (msg, ws, server, logger) => {
@@ -70,23 +70,23 @@ const getTask = (msg, ws, server, logger) => {
 
 const newTask = (msg, ws, server, logger) => {
   const id = sid.generate()
-  const { name: _name, algorithmId, evaluatorId } = msg
+  const { name: _name, optimizerId, evaluatorId } = msg
   let name = _name
   if (!name) {
     name = generate().dashed
   }
-  store.dispatch(newTaskAction(id, name, algorithmId, evaluatorId))
+  store.dispatch(newTaskAction(id, name, optimizerId, evaluatorId))
 
   const res = JSON.stringify({
     type: 'taskCreated',
-    algorithmId,
+    optimizerId,
     evaluatorId,
     id,
   })
   ws.send(res)
 
   sendToTaskManagers(server, store)(res)
-  sendToAlgorithm(server, store)(id, res)
+  sendToOptimizer(server, store)(id, res)
 
   logger.debug(`task ${id} has been created`)
 }
@@ -109,7 +109,7 @@ const startTask = (msg, ws, server, logger) => {
   const { id } = msg
   const state = store.getState()
   const status = state.getIn(['tasks', id, 'status']) // save for later
-  
+
   store.dispatch(startTaskAction(id))
 
   // Process the pending queue
@@ -137,7 +137,7 @@ const startTask = (msg, ws, server, logger) => {
   sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
   if (status === 'init') { // new start
-    sendToAlgorithm(server, store)(id, notif)
+    sendToOptimizer(server, store)(id, notif)
   }
 
   logger.debug(`try to start task ${id}`)
@@ -149,7 +149,7 @@ const stopTask = (msg, ws, server, logger) => {
     type: 'stopTask',
     id,
   })
-  sendToAlgorithm(server, store)(id, notif)
+  sendToOptimizer(server, store)(id, notif)
   store.dispatch(stopTaskAction(id))
 
   sendToTaskManagers(server, store)(notif)

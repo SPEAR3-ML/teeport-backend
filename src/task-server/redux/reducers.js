@@ -39,9 +39,9 @@ const reducer = (state = initialState, action) => {
     case NEW_TASK: {
       const task = taskDef()
       const { id, task: _task } = action
-      const { name, algorithmId, evaluatorId } = _task
+      const { name, optimizerId, evaluatorId } = _task
       task.name = name
-      task.algorithmId = algorithmId
+      task.optimizerId = optimizerId
       task.evaluatorId = evaluatorId
       task.createdAt = Date.now()
       return state.withMutations(prev => {
@@ -51,7 +51,7 @@ const reducer = (state = initialState, action) => {
         }
         evalTaskIds = evalTaskIds.push(id)
         prev.setIn(['tasks', id], fromJS(task))
-        prev.setIn(['clients', algorithmId, 'taskId'], id)
+        prev.setIn(['clients', optimizerId, 'taskId'], id)
         prev.setIn(['clients', evaluatorId, 'taskId'], evalTaskIds)
       })
     }
@@ -85,14 +85,14 @@ const reducer = (state = initialState, action) => {
     case STOP_TASK: {
       return state.withMutations(prev => {
         const status = prev.getIn(['tasks', action.id, 'status'])
-        const algorithmId = prev.getIn(['tasks', action.id, 'algorithmId'])
+        const optimizerId = prev.getIn(['tasks', action.id, 'optimizerId'])
         const evaluatorId = prev.getIn(['tasks', action.id, 'evaluatorId'])
         if (['init', 'paused', 'running'].includes(status)) {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
           prev.setIn(['tasks', action.id, 'status'], 'cancelled')
-          const algorithm = prev.getIn(['clients', algorithmId])
-          if (algorithm) {
-            prev.setIn(['clients', algorithmId, 'taskId'], null)
+          const optimizer = prev.getIn(['clients', optimizerId])
+          if (optimizer) {
+            prev.setIn(['clients', optimizerId, 'taskId'], null)
           }
           const evaluator = prev.getIn(['clients', evaluatorId])
           if (evaluator) {
@@ -108,14 +108,14 @@ const reducer = (state = initialState, action) => {
     case COMPLETE_TASK: {
       return state.withMutations(prev => {
         const status = prev.getIn(['tasks', action.id, 'status'])
-        const algorithmId = prev.getIn(['tasks', action.id, 'algorithmId'])
+        const optimizerId = prev.getIn(['tasks', action.id, 'optimizerId'])
         const evaluatorId = prev.getIn(['tasks', action.id, 'evaluatorId'])
         if (status === 'running') {
           prev.setIn(['tasks', action.id, 'stoppedAt'], Date.now())
           prev.setIn(['tasks', action.id, 'status'], 'completed')
-          const algorithm = prev.getIn(['clients', algorithmId])
-          if (algorithm) {
-            prev.setIn(['clients', algorithmId, 'taskId'], null)
+          const optimizer = prev.getIn(['clients', optimizerId])
+          if (optimizer) {
+            prev.setIn(['clients', optimizerId, 'taskId'], null)
           }
           const evaluator = prev.getIn(['clients', evaluatorId])
           if (evaluator) {
