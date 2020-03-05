@@ -11,7 +11,14 @@ const { sendToClientManagers } = require('../../utils/helpers')
 
 const connect = (req, ws, server, logger) => {
   ws.id = sid.generate()
-  const { query: { name: _name, type: _type, taskId: _taskId } } = parse(req.url, true)
+  const {
+    query: {
+      name: _name,
+      type: _type,
+      taskId: _taskId,
+      private: _private,
+    },
+  } = parse(req.url, true)
   let name = _name
   if (!name) {
     name = generate().dashed
@@ -24,7 +31,8 @@ const connect = (req, ws, server, logger) => {
   if (!taskId) {
     taskId = null
   }
-  store.dispatch(connectAction(ws.id, name, type, taskId))
+  const priv = !!_private
+  store.dispatch(connectAction(ws.id, name, type, taskId, priv))
 
   const res = JSON.stringify({
     type: 'hello',

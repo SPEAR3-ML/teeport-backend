@@ -2,6 +2,7 @@ const clientDef = () => {
   return {
     name: null,
     type: null,
+    private: false,
     taskId: null,
     connectedAt: null,
     configs: {},

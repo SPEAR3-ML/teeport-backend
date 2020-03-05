@@ -18,10 +18,11 @@ const reducer = (state = initialState, action) => {
     case CONNECT: {
       const client = clientDef()
       const { id, client: _client } = action
-      const { name, type, taskId } = _client
+      const { name, type, taskId, private: priv } = _client
       client.name = name
       client.type = type
       client.taskId = taskId
+      client.private = priv
       client.connectedAt = Date.now()
       return state.setIn(['clients', id], fromJS(client))
     }
