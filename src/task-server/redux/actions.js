@@ -1,5 +1,5 @@
 const {
-  CONNECT, DISCONNECT, RENAME_CLIENT,
+  CONNECT, DISCONNECT, RENAME_CLIENT, OBSERVE_TASK,
   NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK,
   RENAME_TASK, ARCHIVE_TASK, UNARCHIVE_TASK, DELETE_TASK,
   EVALUATE, EVALUATED,
@@ -25,6 +25,12 @@ const renameClient = (id, name) => ({
   type: RENAME_CLIENT,
   id,
   name,
+})
+
+const observeTask = (clientId, taskId) => ({
+  type: OBSERVE_TASK,
+  clientId,
+  taskId,
 })
 
 const newTask = (id, name, optimizerId, evaluatorId) => ({
@@ -100,6 +106,7 @@ module.exports = {
   connect,
   disconnect,
   renameClient,
+  observeTask,
   newTask,
   updateTask,
   pauseTask,

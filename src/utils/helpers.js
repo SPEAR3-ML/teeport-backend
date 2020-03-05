@@ -25,7 +25,7 @@ const sendToMonitors = (server, store) => (taskId, res) => {
   server.clients.forEach(client => {
     const clientType = state.getIn(['clients', client.id, 'type'])
     const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
-    if (clientType === 'monitor' && clientTaskId === taskId) {
+    if (['monitor', 'wildcard'].includes(clientType) && clientTaskId === taskId) {
       client.send(res)
     }
   })

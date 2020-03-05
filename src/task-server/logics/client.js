@@ -6,6 +6,7 @@ const {
 } = require('../redux/selectors')
 const {
   renameClient: renameClientAction,
+  observeTask: observeTaskAction,
 } = require('../redux/actions')
 const { closeSocket, sendToClientManagers } = require('../../utils/helpers')
 
@@ -51,9 +52,16 @@ const renameClient = (msg, ws, server, logger) => {
   logger.debug(`client ${msg.clientId} has been renamed to ${msg.name}`)
 }
 
+const observeTask = (msg, ws, server, logger) => {
+  store.dispatch(observeTaskAction(ws.id, msg.id))
+
+  logger.debug(`client ${ws.id} start to observe ${msg.id}`)
+}
+
 module.exports = {
   getClients,
   getClient,
   closeClient,
   renameClient,
+  observeTask,
 }
