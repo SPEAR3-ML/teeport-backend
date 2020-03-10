@@ -31,7 +31,7 @@ const connect = (req, ws, server, logger) => {
   if (!taskId) {
     taskId = null
   }
-  const priv = !!_private
+  const priv = (_private === 'True')
   store.dispatch(connectAction(ws.id, name, type, taskId, priv))
 
   const res = JSON.stringify({
