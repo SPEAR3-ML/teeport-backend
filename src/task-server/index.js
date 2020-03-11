@@ -27,7 +27,14 @@ class TaskServer {
 
     server.on('connection', (ws, req) => {
       ws.on('message', message => {
-        const msg = JSON.parse(message)
+        let msg = null
+        try {
+          msg = JSON.parse(message)
+        } catch (error) {
+          logger.debug(`mal format: ${message}`)
+          return
+        }
+
         const { type } = msg
         switch (type) {
           case 'evaluate':
