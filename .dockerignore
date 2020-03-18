@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+
+.eslintrc
+.git
+.gitignore
+
+*.sublime-project
+*.sublime-workspace
+
+Dockerfile
+.dockerignore
+
+error_task-server.log
