@@ -11,11 +11,15 @@ const { sendToClientManagers } = require('../../utils/helpers')
 
 const connect = (req, ws, server, logger) => {
   ws.id = sid.generate()
+  // console.log(parse(req.url, true).query)
+  // console.log(JSON.parse(parse(req.url, true).query.configs))
   const {
     query: {
       name: _name,
       type: _type,
+      classId: _classId,
       taskId: _taskId,
+      configs: _configs,
       private: _private,
     },
   } = parse(req.url, true)
@@ -27,12 +31,22 @@ const connect = (req, ws, server, logger) => {
   if (!type) {
     type = null
   }
+  let classId = _classId
+  if (!classId) {
+    classId = null
+  }
   let taskId = _taskId
   if (!taskId) {
     taskId = null
   }
+  let configs = _configs
+  if (!configs) {
+    configs = {}
+  } else {
+    configs = JSON.parse(configs)
+  }
   const priv = (_private === 'True' || _private === 'true')
-  store.dispatch(connectAction(ws.id, name, type, taskId, priv))
+  store.dispatch(connectAction(ws.id, name, type, classId, taskId, configs, priv))
 
   const res = JSON.stringify({
     type: 'hello',
