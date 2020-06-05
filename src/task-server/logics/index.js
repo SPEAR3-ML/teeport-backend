@@ -12,6 +12,7 @@ const {
   closeClient,
   renameClient,
   observeTask,
+  updateClientDescr,
 } = require('./client')
 
 module.exports = {
@@ -39,4 +40,5 @@ module.exports = {
   closeClient,
   renameClient,
   observeTask,
+  updateClientDescr,
 }

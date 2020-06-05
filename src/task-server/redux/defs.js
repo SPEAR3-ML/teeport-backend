@@ -7,6 +7,7 @@ const clientDef = () => {
     taskId: null,
     connectedAt: null,
     configs: {},
+    descr: null,
   }
 }
 
@@ -25,6 +26,7 @@ const taskDef = () => {
     pending: [],
     history: [],
     configs: {},
+    descr: null,
   }
 }
 

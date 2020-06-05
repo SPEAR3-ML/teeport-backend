@@ -7,6 +7,7 @@ const {
 const {
   renameClient: renameClientAction,
   observeTask: observeTaskAction,
+  updateClientDescr: updateClientDescrAction,
 } = require('../redux/actions')
 const { closeSocket, sendToClientManagers } = require('../../utils/helpers')
 
@@ -58,10 +59,23 @@ const observeTask = (msg, ws, server, logger) => {
   logger.debug(`client ${ws.id} start to observe ${msg.id}`)
 }
 
+const updateClientDescr = (msg, ws, server, logger) => {
+  store.dispatch(updateClientDescrAction(msg.clientId, msg.descr))
+
+  const notif = JSON.stringify({
+    type: 'updated',
+    id: msg.clientId,
+  })
+  sendToClientManagers(server, store)(notif)
+
+  logger.debug(`client ${msg.clientId} descr has been updated to ${msg.descr}`)
+}
+
 module.exports = {
   getClients,
   getClient,
   closeClient,
   renameClient,
   observeTask,
+  updateClientDescr,
 }

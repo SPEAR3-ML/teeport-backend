@@ -9,7 +9,7 @@ const {
   archiveTask, unarchiveTask, deleteTask,
   getClients, getClient,
   closeClient, renameClient,
-  observeTask,
+  observeTask, updateClientDescr,
 } = require('./logics')
 
 class TaskServer {
@@ -102,6 +102,9 @@ class TaskServer {
             break
           case 'observeTask':
             observeTask(msg, ws, server, logger)
+            break
+          case 'updateClientDescr':
+            updateClientDescr(msg, ws, server, logger)
             break
           default:
             logger.warn(`received: ${message}`)
