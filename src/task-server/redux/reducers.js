@@ -73,6 +73,10 @@ const reducer = (state = initialState, action) => {
           evalTaskIds = List()
         }
         evalTaskIds = evalTaskIds.push(id)
+        const algorithmId = prev.getIn(['clients', optimizerId, 'classId'])
+        const problemId = prev.getIn(['clients', evaluatorId, 'classId'])
+        task.algorithmId = algorithmId
+        task.problemId = problemId
         prev.setIn(['tasks', id], fromJS(task))
         prev.setIn(['clients', optimizerId, 'taskId'], id)
         prev.setIn(['clients', evaluatorId, 'taskId'], evalTaskIds)
