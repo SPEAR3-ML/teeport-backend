@@ -41,11 +41,11 @@ const updateClientDescr = (id, descr) => ({
   descr,
 })
 
-const newTask = (id, name, optimizerId, evaluatorId) => ({
+const newTask = (id, configs, optimizerId, evaluatorId) => ({
   type: NEW_TASK,
   id,
   task: {
-    name,
+    configs,
     optimizerId,
     evaluatorId,
   },

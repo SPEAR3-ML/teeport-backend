@@ -13,6 +13,12 @@ const evaluate = async (msg, ws, server, logger) => {
   const taskId = state.getIn(['clients', ws.id, 'taskId'])
   msg.taskId = taskId
   msg.timestamp = Date.now()
+  try {
+    msg.configs = state.getIn(['tasks', taskId, 'configs', 'evaluator']).toJS()
+  } catch (error) {
+    msg.configs = null
+  }
+
   const evaluatorId = state.getIn(['tasks', taskId, 'evaluatorId'])
   const taskStatus = state.getIn(['tasks', taskId, 'status'])
   server.clients.forEach(client => {

@@ -70,12 +70,16 @@ const getTask = (msg, ws, server, logger) => {
 
 const newTask = (msg, ws, server, logger) => {
   const id = sid.generate()
-  const { name: _name, optimizerId, evaluatorId } = msg
-  let name = _name
-  if (!name) {
-    name = generate().dashed
+  const { configs, optimizerId, evaluatorId } = msg
+  const { task: _task } = configs
+  if (!_task) {
+    configs.task = {
+      name: generate().dashed,
+    }
+  } else if (!_task.name) {
+    configs.task.name = generate().dashed
   }
-  store.dispatch(newTaskAction(id, name, optimizerId, evaluatorId))
+  store.dispatch(newTaskAction(id, configs, optimizerId, evaluatorId))
 
   const res = JSON.stringify({
     type: 'taskCreated',
@@ -130,9 +134,11 @@ const startTask = (msg, ws, server, logger) => {
     })
   }
 
+  const configs = state.getIn(['tasks', id, 'configs']).toJS()
   const notif = JSON.stringify({
     type: 'startTask',
     id,
+    configs,
   })
   sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
@@ -160,6 +166,11 @@ const stopTask = (msg, ws, server, logger) => {
 
 const completeTask = (msg, ws, server, logger) => {
   const { id } = msg
+  // check if the evalutor is a private one
+  const state = store.getState()
+  const evaluatorId = state.getIn(['tasks', id, 'evaluatorId'])
+  const isPrivate = state.getIn(['clients', evaluatorId, 'private'])
+
   store.dispatch(completeTaskAction(id))
 
   const notif = JSON.stringify({
@@ -168,6 +179,15 @@ const completeTask = (msg, ws, server, logger) => {
   })
   sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
+
+  // Notify the evaluator the task is completed if it's a private one
+  if (isPrivate) {
+    server.clients.forEach(client => {
+      if (client.id === evaluatorId && client.readyState === WebSocket.OPEN) {
+        client.send(notif)
+      }
+    })
+  }
 
   logger.debug(`try to complete task ${id}`)
 }

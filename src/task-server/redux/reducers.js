@@ -61,10 +61,11 @@ const reducer = (state = initialState, action) => {
     case NEW_TASK: {
       const task = taskDef()
       const { id, task: _task } = action
-      const { name, optimizerId, evaluatorId } = _task
-      task.name = name
+      const { configs, optimizerId, evaluatorId } = _task
+      task.name = configs.task.name
       task.optimizerId = optimizerId
       task.evaluatorId = evaluatorId
+      task.configs = configs
       task.createdAt = Date.now()
       return state.withMutations(prev => {
         let evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
