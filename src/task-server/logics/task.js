@@ -14,6 +14,7 @@ const {
   archiveTask: archiveTaskAction,
   unarchiveTask: unarchiveTaskAction,
   deleteTask: deleteTaskAction,
+  updateTaskDescr: updateTaskDescrAction,
 } = require('../redux/actions')
 const {
   selectTasks,
@@ -240,6 +241,18 @@ const deleteTask = (msg, ws, server, logger) => {
   logger.debug(`try to delete task ${msg.id}`)
 }
 
+const updateTaskDescr = (msg, ws, server, logger) => {
+  store.dispatch(updateTaskDescrAction(msg.taskId, msg.descr))
+
+  const notif = JSON.stringify({
+    type: 'updateTask',
+    id: msg.taskId,
+  })
+  sendToTaskManagers(server, store)(notif)
+
+  logger.debug(`task ${msg.taskId} descr has been updated to ${msg.descr}`)
+}
+
 module.exports = {
   getTasks,
   getTasksOverview,
@@ -253,4 +266,5 @@ module.exports = {
   archiveTask,
   unarchiveTask,
   deleteTask,
+  updateTaskDescr,
 }

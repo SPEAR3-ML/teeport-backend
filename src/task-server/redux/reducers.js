@@ -3,7 +3,7 @@ const { List, fromJS } = require('immutable')
 const {
   CONNECT, DISCONNECT, RENAME_CLIENT, OBSERVE_TASK, UPDATE_CLIENT_DESCR,
   NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK, RENAME_TASK,
-  ARCHIVE_TASK, UNARCHIVE_TASK, DELETE_TASK,
+  ARCHIVE_TASK, UNARCHIVE_TASK, DELETE_TASK, UPDATE_TASK_DESCR,
   EVALUATE, EVALUATED,
 } = require('./actionTypes')
 const { clientDef, taskDef } = require('./defs')
@@ -184,6 +184,14 @@ const reducer = (state = initialState, action) => {
         const task = prev.getIn(['tasks', action.id])
         if (task) {
           prev.deleteIn(['tasks', action.id])
+        }
+      })
+    }
+    case UPDATE_TASK_DESCR: {
+      return state.withMutations(prev => {
+        const task = prev.getIn(['tasks', action.id])
+        if (task) {
+          prev.setIn(['tasks', action.id, 'descr'], action.descr)
         }
       })
     }

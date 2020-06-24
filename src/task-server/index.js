@@ -6,7 +6,7 @@ const {
   monitor,
   getTasks, getTasksOverview, getTask,
   newTask, pauseTask, startTask, stopTask, completeTask, renameTask,
-  archiveTask, unarchiveTask, deleteTask,
+  archiveTask, unarchiveTask, deleteTask, updateTaskDescr,
   getClients, getClient,
   closeClient, renameClient,
   observeTask, updateClientDescr,
@@ -87,6 +87,9 @@ class TaskServer {
             break
           case 'deleteTask':
             deleteTask(msg, ws, server, logger)
+            break
+          case 'updateTaskDescr':
+            updateTaskDescr(msg, ws, server, logger)
             break
           case 'getClients':
             getClients(msg, ws, server, logger)
