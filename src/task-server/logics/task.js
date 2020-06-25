@@ -5,6 +5,7 @@ const _ = require('lodash')
 
 const store = require('../redux/store')
 const {
+  importTasks: importTasksAction,
   newTask: newTaskAction,
   pauseTask: pauseTaskAction,
   startTask: startTaskAction,
@@ -67,6 +68,14 @@ const getTask = (msg, ws, server, logger) => {
     timestamp: Date.now(),
   }
   ws.send(JSON.stringify(res))
+}
+
+const importTasks = (msg, ws, server, logger) => {
+  store.dispatch(importTasksAction(msg.tasks))
+  const notif = JSON.stringify({
+    type: 'updateTasks',
+  })
+  sendToTaskManagers(server, store)(notif)
 }
 
 const newTask = (msg, ws, server, logger) => {
@@ -257,6 +266,7 @@ module.exports = {
   getTasks,
   getTasksOverview,
   getTask,
+  importTasks,
   newTask,
   pauseTask,
   startTask,

@@ -3,7 +3,7 @@ const { evaluate, evaluated } = require('./evaluate')
 const { process, processed } = require('./process')
 const monitor = require('./monitor')
 const {
-  getTasks, getTasksOverview, getTask,
+  getTasks, getTasksOverview, getTask, importTasks,
   newTask, pauseTask, startTask, stopTask, completeTask, renameTask,
   archiveTask, unarchiveTask, deleteTask, updateTaskDescr,
 } = require('./task')
@@ -27,6 +27,7 @@ module.exports = {
   getTasksOverview,
   getTask,
   newTask,
+  importTasks,
   pauseTask,
   startTask,
   stopTask,
