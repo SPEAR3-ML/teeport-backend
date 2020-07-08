@@ -1,10 +1,10 @@
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-const sendToClientManagers = (server, store) => res => {
+const sendToClientManagers = (server, store, exclude = []) => res => {
   const state = store.getState()
   server.clients.forEach(client => {
     const type = state.getIn(['clients', client.id, 'type'])
-    if (type === 'clientManager') {
+    if (type === 'clientManager' && exclude.indexOf(client.id) === -1) {
       client.send(res)
     }
   })

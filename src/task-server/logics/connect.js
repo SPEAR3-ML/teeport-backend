@@ -58,7 +58,7 @@ const connect = (req, ws, server, logger) => {
     type: 'connected',
     id: ws.id,
   })
-  sendToClientManagers(server, store)(notif)
+  sendToClientManagers(server, store, [ws.id])(notif)
 
   logger.debug(`client ${ws.id} connected`)
 }
