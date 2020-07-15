@@ -28,6 +28,23 @@ const {
 } = require('../../utils/helpers')
 
 const getTasks = (msg, ws, server, logger) => {
+  const { ids } = msg
+  if (ids) {
+    const tasks = ids.map(id => {
+      const task = selectTask(id)(store.getState())
+      task.id = id
+      return task
+    })
+
+    const res = {
+      type: 'tasks',
+      tasks,
+      timestamp: Date.now(),
+    }
+    ws.send(JSON.stringify(res))
+    return
+  }
+
   const tasks = selectTasks(store.getState())
   const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
     return _.assign(task, { id: taskId })
@@ -42,6 +59,25 @@ const getTasks = (msg, ws, server, logger) => {
 }
 
 const getTasksOverview = (msg, ws, server, logger) => {
+  const { ids } = msg
+  if (ids) {
+    const tasks = ids.map(id => {
+      const task = selectTask(id)(store.getState())
+      task.id = id
+      delete task.history
+      delete task.pending
+      return task
+    })
+
+    const res = {
+      type: 'tasksOverview',
+      tasks,
+      timestamp: Date.now(),
+    }
+    ws.send(JSON.stringify(res))
+    return
+  }
+
   const tasks = selectTasks(store.getState())
   const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
     const taskAbstract = _.assign({ id: taskId }, task)
