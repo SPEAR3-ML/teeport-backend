@@ -38,6 +38,12 @@ const connect = (req, ws, server, logger) => {
   let taskId = _taskId
   if (!taskId) {
     taskId = null
+  } else {
+    try { // try to parse the stringified list taskId
+      taskId = JSON.parse(taskId)
+    } catch (error) {
+      // taskId is pure string, do nothing
+    }
   }
   let configs = _configs
   if (!configs) {

@@ -18,6 +18,7 @@ const evaluate = async (msg, ws, server, logger) => {
   } catch (error) {
     msg.configs = null
   }
+  const msgStr = JSON.stringify(msg)
 
   const evaluatorId = state.getIn(['tasks', taskId, 'evaluatorId'])
   const taskStatus = state.getIn(['tasks', taskId, 'status'])
@@ -26,28 +27,30 @@ const evaluate = async (msg, ws, server, logger) => {
     const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
     if (client.id === evaluatorId && client.readyState === WebSocket.OPEN) {
       if (taskStatus === 'running') {
-        client.send(JSON.stringify(msg))
+        client.send(msgStr)
       }
       store.dispatch(evaluateAction(taskId, msg.data))
-    } else if (clientType === 'monitor' && clientTaskId === taskId) {
-      client.send(JSON.stringify(msg))
+    } else if (clientType === 'monitor' && clientTaskId.contains(taskId)) {
+      client.send(msgStr)
     }
   })
 }
 
 const evaluated = (msg, ws, server, logger) => {
   const { taskId } = msg
-  delete msg.taskId
+  // delete msg.taskId // no need to delete the taskId, the client actually doesn't care
   msg.timestamp = Date.now()
+  const msgStr = JSON.stringify(msg)
+
   const state = store.getState()
   const optimizerId = state.getIn(['tasks', taskId, 'optimizerId'])
   server.clients.forEach(client => {
     const clientType = state.getIn(['clients', client.id, 'type'])
     const clientTaskId = state.getIn(['clients', client.id, 'taskId'])
     if (client.id === optimizerId && client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(msg))
-    } else if (clientType === 'monitor' && clientTaskId === taskId) {
-      client.send(JSON.stringify(msg))
+      client.send(msgStr)
+    } else if (clientType === 'monitor' && clientTaskId.contains(taskId)) {
+      client.send(msgStr)
     }
   })
   store.dispatch(evaluatedAction(taskId, msg.data))
