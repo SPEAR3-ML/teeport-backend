@@ -3,10 +3,10 @@ const { List, fromJS } = require('immutable')
 const {
   CONNECT, DISCONNECT, RENAME_CLIENT, OBSERVE_TASK, UPDATE_CLIENT_DESCR,
   IMPORT_TASKS, NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK, RENAME_TASK,
-  ARCHIVE_TASK, UNARCHIVE_TASK, DELETE_TASK, UPDATE_TASK_DESCR,
+  NEW_BENCHMARK_TASK, ARCHIVE_TASK, UNARCHIVE_TASK, DELETE_TASK, UPDATE_TASK_DESCR,
   EVALUATE, EVALUATED,
 } = require('./actionTypes')
-const { clientDef, taskDef } = require('./defs')
+const { clientDef, taskDef, benchmarkTaskDef } = require('./defs')
 
 const initialState = fromJS({
   clients: {},
@@ -170,6 +170,30 @@ const reducer = (state = initialState, action) => {
         if (task) {
           prev.setIn(['tasks', action.id, 'name'], action.name)
         }
+      })
+    }
+    case NEW_BENCHMARK_TASK: {
+      const task = benchmarkTaskDef()
+      const { id, task: _task } = action
+      const { configs, optimizerId, evaluatorId } = _task
+      task.name = configs.task.name
+      task.optimizerId = optimizerId
+      task.evaluatorId = evaluatorId
+      task.configs = configs
+      task.createdAt = Date.now()
+      return state.withMutations(prev => {
+        let evalTaskIds = prev.getIn(['clients', evaluatorId, 'taskId'])
+        if (!evalTaskIds) {
+          evalTaskIds = List()
+        }
+        evalTaskIds = evalTaskIds.push(id)
+        const algorithmId = prev.getIn(['clients', optimizerId, 'classId'])
+        const problemId = prev.getIn(['clients', evaluatorId, 'classId'])
+        task.algorithmId = algorithmId
+        task.problemId = problemId
+        prev.setIn(['tasks', id], fromJS(task))
+        prev.setIn(['clients', optimizerId, 'taskId'], id)
+        prev.setIn(['clients', evaluatorId, 'taskId'], evalTaskIds)
       })
     }
     case ARCHIVE_TASK: {

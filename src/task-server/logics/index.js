@@ -5,6 +5,7 @@ const monitor = require('./monitor')
 const {
   getTasks, getTasksOverview, getTask, importTasks,
   newTask, pauseTask, startTask, stopTask, completeTask, renameTask,
+  newBenchmarkTask,
   archiveTask, unarchiveTask, deleteTask, updateTaskDescr,
 } = require('./task')
 const {
@@ -33,6 +34,7 @@ module.exports = {
   stopTask,
   completeTask,
   renameTask,
+  newBenchmarkTask,
   archiveTask,
   unarchiveTask,
   deleteTask,

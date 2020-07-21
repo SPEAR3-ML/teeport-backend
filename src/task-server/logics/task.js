@@ -12,6 +12,7 @@ const {
   stopTask: stopTaskAction,
   completeTask: completeTaskAction,
   renameTask: renameTaskAction,
+  newBenchmarkTask: newBenchmarkTaskAction,
   archiveTask: archiveTaskAction,
   unarchiveTask: unarchiveTaskAction,
   deleteTask: deleteTaskAction,
@@ -250,6 +251,33 @@ const renameTask = (msg, ws, server, logger) => {
   logger.debug(`task ${msg.taskId} has been renamed to ${msg.name}`)
 }
 
+const newBenchmarkTask = (msg, ws, server, logger) => {
+  const id = sid.generate()
+  const { configs, optimizerId, evaluatorId } = msg
+  const { task: _task } = configs
+  if (!_task) {
+    configs.task = {
+      name: generate().dashed,
+    }
+  } else if (!_task.name) {
+    configs.task.name = generate().dashed
+  }
+  store.dispatch(newBenchmarkTaskAction(id, configs, optimizerId, evaluatorId))
+
+  const res = JSON.stringify({
+    type: 'taskCreated',
+    optimizerId,
+    evaluatorId,
+    id,
+  })
+  ws.send(res)
+
+  sendToTaskManagers(server, store)(res)
+  sendToOptimizer(server, store)(id, res)
+
+  logger.debug(`benchmark task ${id} has been created`)
+}
+
 const archiveTask = (msg, ws, server, logger) => {
   store.dispatch(archiveTaskAction(msg.id))
 
@@ -309,6 +337,7 @@ module.exports = {
   stopTask,
   completeTask,
   renameTask,
+  newBenchmarkTask,
   archiveTask,
   unarchiveTask,
   deleteTask,
