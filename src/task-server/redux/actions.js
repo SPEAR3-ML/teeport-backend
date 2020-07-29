@@ -1,7 +1,8 @@
 const {
   CONNECT, DISCONNECT, RENAME_CLIENT, OBSERVE_TASK, UPDATE_CLIENT_DESCR,
   IMPORT_TASKS, NEW_TASK, UPDATE_TASK, PAUSE_TASK, START_TASK, STOP_TASK, COMPLETE_TASK,
-  RENAME_TASK, NEW_BENCHMARK_TASK, ARCHIVE_TASK, UNARCHIVE_TASK, DELETE_TASK, UPDATE_TASK_DESCR,
+  RENAME_TASK, NEW_BENCHMARK_TASK, ARCHIVE_TASK, UNARCHIVE_TASK, DELETE_TASK,
+  UPDATE_TASK_DESCR, NEW_RUN,
   EVALUATE, EVALUATED,
 } = require('./actionTypes')
 
@@ -119,6 +120,11 @@ const updateTaskDescr = (id, descr) => ({
   descr,
 })
 
+const newRun = id => ({
+  type: NEW_RUN,
+  id,
+})
+
 const evaluate = (taskId, data) => ({
   type: EVALUATE,
   taskId,
@@ -150,6 +156,7 @@ module.exports = {
   unarchiveTask,
   deleteTask,
   updateTaskDescr,
+  newRun,
   evaluate,
   evaluated,
 }
