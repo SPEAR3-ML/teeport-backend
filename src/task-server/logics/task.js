@@ -17,6 +17,7 @@ const {
   unarchiveTask: unarchiveTaskAction,
   deleteTask: deleteTaskAction,
   updateTaskDescr: updateTaskDescrAction,
+  newRun: newRunAction,
 } = require('../redux/actions')
 const {
   selectTasks,
@@ -156,12 +157,18 @@ const pauseTask = (msg, ws, server, logger) => {
   logger.debug(`try to pause task ${id}`)
 }
 
+// start task includes create task and resume task
 const startTask = (msg, ws, server, logger) => {
   const { id } = msg
   const state = store.getState()
   const status = state.getIn(['tasks', id, 'status']) // save for later
 
   store.dispatch(startTaskAction(id))
+
+  const currentRun = state.getIn(['tasks', id, 'currentRun']) // benchmark flag
+  if (currentRun === -1) { // init benchmark task
+    store.dispatch(newRunAction(id))
+  }
 
   // Process the pending queue
   const pending = state.getIn(['tasks', id, 'pending'])
@@ -218,6 +225,33 @@ const completeTask = (msg, ws, server, logger) => {
   const evaluatorId = state.getIn(['tasks', id, 'evaluatorId'])
   const isPrivate = state.getIn(['clients', evaluatorId, 'private'])
 
+  const currentRun = state.getIn(['tasks', id, 'currentRun']) // benchmark flag
+  if (currentRun !== undefined) { // benchmark task
+    const runNumber = state.getIn(['tasks', id, 'configs', 'task', 'runNumber'])
+    if (currentRun < runNumber - 1) { // should start a new run
+      store.dispatch(newRunAction(id))
+      // cheat the optimizer that a new task has been created
+      const optimizerId = state.getIn(['tasks', id, 'optimizerId'])
+      const taskCreated = JSON.stringify({
+        type: 'taskCreated',
+        optimizerId,
+        evaluatorId,
+        id,
+      })
+      sendToOptimizer(server, store)(id, taskCreated)
+      // and start running it
+      const configs = state.getIn(['tasks', id, 'configs']).toJS()
+      const notif = JSON.stringify({
+        type: 'startTask',
+        id,
+        configs,
+      })
+      sendToOptimizer(server, store)(id, notif)
+      sendToMonitors(server, store)(id, notif)
+      return
+    }
+  }
+  // Complete the task
   store.dispatch(completeTaskAction(id))
 
   const notif = JSON.stringify({

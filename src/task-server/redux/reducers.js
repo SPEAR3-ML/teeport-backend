@@ -254,8 +254,21 @@ const reducer = (state = initialState, action) => {
           return
         }
         const XYList = List().push(XList).push(fromJS(Y))
-        const history = prev.getIn(['tasks', taskId, 'history'])
-        prev.setIn(['tasks', taskId, 'history', history.size], XYList)
+        const currentRun = state.getIn(['tasks', taskId, 'currentRun']) // benchmark flag
+        if (currentRun === undefined) { // normal task
+          const history = prev.getIn(['tasks', taskId, 'history'])
+          prev.setIn(['tasks', taskId, 'history', history.size], XYList)
+        } else { // benchmark task
+          const history = prev.getIn(['tasks', taskId, 'history', currentRun])
+          let idx = 0
+          if (history === undefined) { // first evaluation in a run
+            // initialize the list
+            prev.setIn(['tasks', taskId, 'history', currentRun], List())
+          } else {
+            idx = history.size
+          }
+          prev.setIn(['tasks', taskId, 'history', currentRun, idx], XYList)
+        }
         prev.deleteIn(['tasks', taskId, 'pending', 0])
       })
     }
