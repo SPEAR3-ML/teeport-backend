@@ -97,9 +97,32 @@ const getTasksOverview = (msg, ws, server, logger) => {
 }
 
 const getTask = (msg, ws, server, logger) => {
-  const { id } = msg
+  const { id, mode } = msg
   const task = selectTask(id)(store.getState())
   task.id = id
+  if (mode !== 'all') { // only return Y of the task
+    task.pending = []
+    let isBenchmark = false
+    try {
+      const { runNumber } = task.configs.task
+      if (runNumber !== undefined) {
+        isBenchmark = true
+      }
+    } catch (error) {
+      // do nothing
+    }
+    if (isBenchmark) {
+      task.history.forEach(run => {
+        run.forEach(generation => {
+          generation[0] = []
+        })
+      })
+    } else {
+      task.history.forEach(generation => {
+        generation[0] = []
+      })
+    }
+  }
   const res = {
     type: 'task',
     task,

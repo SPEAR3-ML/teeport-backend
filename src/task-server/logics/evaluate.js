@@ -31,7 +31,10 @@ const evaluate = async (msg, ws, server, logger) => {
       }
       store.dispatch(evaluateAction(taskId, msg.data))
     } else if (clientType === 'monitor' && clientTaskId.contains(taskId)) {
-      client.send(msgStr)
+      const monitorMode = state.getIn(['clients', client.id, 'configs', 'mode'])
+      if (monitorMode === 'all') {
+        client.send(msgStr)
+      }
     }
   })
 }
