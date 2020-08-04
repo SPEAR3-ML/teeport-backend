@@ -81,7 +81,7 @@ const getTasksOverview = (msg, ws, server, logger) => {
   }
 
   const tasks = selectTasks(store.getState())
-  const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
+  const sortedTasks = _.map(tasks, (task, taskId) => {
     const taskAbstract = _.assign({ id: taskId }, task)
     delete taskAbstract.history
     delete taskAbstract.pending

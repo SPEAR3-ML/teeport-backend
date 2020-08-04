@@ -13,7 +13,7 @@ const { closeSocket, sendToClientManagers } = require('../../utils/helpers')
 
 const getClients = (msg, ws, server, logger) => {
   const clients = selectClients(store.getState())
-  const sortedClients = _.toPairs(clients).map(([clientId, client]) => {
+  const sortedClients = _.map(clients, (client, clientId) => {
     return _.assign(client, { id: clientId })
   }).sort((c1, c2) => {
     return c2.connectedAt - c1.connectedAt
