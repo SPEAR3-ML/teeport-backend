@@ -1,17 +1,13 @@
 const { createSelector } = require('reselect')
+const _ = require('lodash')
+
+const { removeXFromTask } = require('../../utils/helpers')
 
 const selectClients = createSelector(
   [
     state => state.get('clients'),
   ],
   clients => clients.toJS(),
-)
-
-const selectClient = clientId => createSelector(
-  [
-    state => state.getIn(['clients', clientId]),
-  ],
-  client => client ? client.toJS() : {},
 )
 
 const selectTasks = createSelector(
@@ -21,11 +17,49 @@ const selectTasks = createSelector(
   tasks => tasks.toJS(),
 )
 
-const selectTask = taskId => createSelector(
+const selectTasksWithoutX = createSelector(
   [
-    state => state.getIn(['tasks', taskId]),
+    state => state.get('tasks'),
   ],
-  task => task ? task.toJS() : {},
+  tasks => {
+    const _tasks = tasks.toJS()
+    _.forEach(_tasks, (task, taskId) => {
+      removeXFromTask(task)
+    })
+    return _tasks
+  },
 )
 
-module.exports = { selectClients, selectClient, selectTasks, selectTask }
+// This doesn't make sense since every time the selctor is being called,
+// a new re-selector is created and the calculations are not saved
+// const selectClient = clientId => createSelector(
+//   [
+//     state => state.getIn(['clients', clientId]),
+//   ],
+//   client => client ? client.toJS() : {},
+// )
+
+// const selectTask = taskId => createSelector(
+//   [
+//     state => state.getIn(['tasks', taskId]),
+//   ],
+//   task => task ? task.toJS() : {},
+// )
+
+const selectClient = clientId => state => {
+  const client = state.getIn(['clients', clientId])
+  return client ? client.toJS() : {}
+}
+
+const selectTask = taskId => state => {
+  const task = state.getIn(['tasks', taskId])
+  return task ? task.toJS() : {}
+}
+
+module.exports = {
+  selectClients,
+  selectTasks,
+  selectTasksWithoutX,
+  selectClient,
+  selectTask,
+}
