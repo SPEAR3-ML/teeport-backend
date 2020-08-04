@@ -52,6 +52,30 @@ const closeSocket = server => id => {
   })
 }
 
+const removeXFromTask = task => {
+  task.pending = []
+  let isBenchmark = false
+  try {
+    const { runNumber } = task.configs.task
+    if (runNumber !== undefined) {
+      isBenchmark = true
+    }
+  } catch (error) {
+    // do nothing
+  }
+  if (isBenchmark) {
+    task.history.forEach(run => {
+      run.forEach(generation => {
+        generation[0] = []
+      })
+    })
+  } else {
+    task.history.forEach(generation => {
+      generation[0] = []
+    })
+  }
+}
+
 module.exports = {
   sleep,
   sendToOptimizer,
@@ -59,4 +83,5 @@ module.exports = {
   sendToTaskManagers,
   sendToClientManagers,
   closeSocket,
+  removeXFromTask,
 }
