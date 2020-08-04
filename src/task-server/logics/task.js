@@ -21,20 +21,25 @@ const {
 } = require('../redux/actions')
 const {
   selectTasks,
+  selectTasksWithoutX,
   selectTask,
 } = require('../redux/selectors')
 const {
   sendToTaskManagers,
   sendToMonitors,
   sendToOptimizer,
+  removeXFromTask,
 } = require('../../utils/helpers')
 
 const getTasks = (msg, ws, server, logger) => {
-  const { ids } = msg
-  if (ids) {
+  const { ids, mode } = msg
+  if (ids && ids.length) { // with non-empty ids property
     const tasks = ids.map(id => {
       const task = selectTask(id)(store.getState())
       task.id = id
+      if (mode !== 'all') { // only return Y of the task
+        removeXFromTask(task)
+      }
       return task
     })
 
@@ -47,8 +52,13 @@ const getTasks = (msg, ws, server, logger) => {
     return
   }
 
-  const tasks = selectTasks(store.getState())
-  const sortedTasks = _.toPairs(tasks).map(([taskId, task]) => {
+  let tasks
+  if (mode === 'all') {
+    tasks = selectTasks(store.getState())
+  } else {
+    tasks = selectTasksWithoutX(store.getState())
+  }
+  const sortedTasks = _.map(tasks, (task, taskId) => {
     return _.assign(task, { id: taskId })
   }).sort((t1, t2) => {
     return t2.createdAt - t1.createdAt
@@ -101,27 +111,7 @@ const getTask = (msg, ws, server, logger) => {
   const task = selectTask(id)(store.getState())
   task.id = id
   if (mode !== 'all') { // only return Y of the task
-    task.pending = []
-    let isBenchmark = false
-    try {
-      const { runNumber } = task.configs.task
-      if (runNumber !== undefined) {
-        isBenchmark = true
-      }
-    } catch (error) {
-      // do nothing
-    }
-    if (isBenchmark) {
-      task.history.forEach(run => {
-        run.forEach(generation => {
-          generation[0] = []
-        })
-      })
-    } else {
-      task.history.forEach(generation => {
-        generation[0] = []
-      })
-    }
+    removeXFromTask(task)
   }
   const res = {
     type: 'task',
