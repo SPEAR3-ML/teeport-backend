@@ -1,6 +1,6 @@
 const df = require('dateformat')
 
-const version = '0.1.0'
+const version = '0.2.0'
 const logLevel = process.env.NODE_ENV === 'development' ? 'debug' : 'info'
 
 const serve = async () => {
