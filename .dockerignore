@@ -12,3 +12,4 @@ Dockerfile
 .dockerignore
 
 error_task-server.log
+*.bat
