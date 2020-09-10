@@ -1,13 +1,14 @@
 {
   "name": "spear3-platform",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "The future platform for all ML and EA stuff in SLAC",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prod": "env-cmd -f .env.prod node index.js",
-    "local": "env-cmd -f .env.prod nodemon .",
-    "dev": "env-cmd -f .env.dev nodemon ."
+    "serve": "env-cmd node index.js",
+    "serve:local": "env-cmd nodemon .",
+    "serve:prod": "env-cmd -f .env.prod node index.js",
+    "serve:dev": "env-cmd -f .env.dev nodemon ."
   },
   "keywords": [
     "ML",
