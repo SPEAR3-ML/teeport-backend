@@ -13,3 +13,5 @@ Dockerfile
 
 error_task-server.log
 *.bat
+.env.* # ignore all specific env files
+.DS_Store
