@@ -16,4 +16,4 @@ RUN npm ci --only=production
 COPY . .
 
 EXPOSE 8080
-CMD [ "npm", "run", "prod" ]
+CMD [ "npm", "run", "serve" ]
