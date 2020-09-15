@@ -131,7 +131,11 @@ const importTasks = (msg, ws, server, logger) => {
 
 const newTask = (msg, ws, server, logger) => {
   const id = sid.generate()
-  const { configs, optimizerId, evaluatorId } = msg
+  const { configs: _configs, optimizerId, evaluatorId } = msg
+  let configs = _configs
+  if (!configs) {
+    configs = {}
+  }
   const { task: _task } = configs
   if (!_task) {
     configs.task = {
