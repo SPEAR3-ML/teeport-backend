@@ -232,6 +232,18 @@ const stopTask = (msg, ws, server, logger) => {
   sendToTaskManagers(server, store)(notif)
   sendToMonitors(server, store)(id, notif)
 
+  // Notify the evaluator the task is completed if it's a private one
+  const state = store.getState()
+  const evaluatorId = state.getIn(['tasks', id, 'evaluatorId'])
+  const isPrivate = state.getIn(['clients', evaluatorId, 'private'])
+  if (isPrivate) {
+    server.clients.forEach(client => {
+      if (client.id === evaluatorId && client.readyState === WebSocket.OPEN) {
+        client.send(notif)
+      }
+    })
+  }
+
   logger.debug(`try to terminate task ${id}`)
 }
 
