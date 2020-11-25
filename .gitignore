@@ -3,3 +3,4 @@ node_modules
 *.log
 **/deploy-*.bat
 **/.env*
+.DS_Store
