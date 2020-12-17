@@ -2,7 +2,7 @@ const df = require('dateformat')
 
 const version = '0.3.0'
 const logLevel = process.env.NODE_ENV === 'development' ? 'debug' : 'info'
-const port = parseInt(process.env.NODE) || 8080
+const port = parseInt(process.env.PORT) || 8080
 
 const serve = async () => {
   console.log(`================== Teeport Server v${version} ==================`)
