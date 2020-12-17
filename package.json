@@ -20,7 +20,7 @@
     "dateformat": "^3.0.3",
     "env-cmd": "^10.1.0",
     "immutable": "^4.0.0-rc.12",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mathjs": "^6.6.0",
     "project-name-generator": "^2.1.7",
     "redux": "^4.0.5",
