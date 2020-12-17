@@ -52,6 +52,12 @@ Service log level     : info
 Service port          : 8080
 ```
 
+### Stop the service
+
+Just hit `ctrl + c` in the terminal in which you run the service to terminate it.
+
+Note that for now, once the Teeport backend service is terminated, all data will be lost unless you have exported them. With the exported data file, you can import them again anytime. To read more about data exporting/importing, please refer to [teeport-frontend](https://github.com/SPEAR3-ML/teeport-frontend).
+
 ## Run the service in docker
 
 ### Prerequisites
@@ -106,3 +112,17 @@ Service mode          : production
 Service log level     : info
 Service port          : 8080
 ```
+
+### Stop the docker image
+
+```bash
+docker stop teeport-backend
+```
+
+You can restart a stopped docker image anytime by running:
+
+```bash
+docker start teeport-backend
+```
+
+Note that for now, once the Teeport backend docker image is stopped, all data will be lost unless you have exported them. With the exported data file, you can import them again anytime. To read more about data exporting/importing, please refer to [teeport-frontend](https://github.com/SPEAR3-ML/teeport-frontend).
