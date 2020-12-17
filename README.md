@@ -2,6 +2,8 @@
 
 Teeport is an optimization platform that aims to solve the communication problems between the optimizers and the evaluators in real life. Read more about Teeport [here](https://teeport.ml/intro/) and [here](https://teeport-client-python.readthedocs.io/en/latest/).
 
+To get the big picture of how Teeport works technically, please take a look at [this Teeport tutorial](https://github.com/SPEAR3-ML/teeport-test).
+
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/) 12+
