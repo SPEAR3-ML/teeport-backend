@@ -4,7 +4,7 @@ Teeport is an optimization platform that aims to solve the communication problem
 
 To get the big picture of how Teeport works technically, please take a look at [this Teeport tutorial](https://github.com/SPEAR3-ML/teeport-test).
 
-To run the service, you can either run it directly (within a Node.js environment, follow the [Run the service directly](#run-the-service-directly) section) or run it in docker (follow the [Run the service in docker](#run-the-service-in-docker) section). You don't have to go through both, just choose one path that fits your needs (I recommend you go with the docker way if docker is avalible in your case).
+To run the service, you can either run it directly (within a Node.js environment, follow the [Run the service directly](#run-the-service-directly) section) or run it in docker (follow the [Run the service in docker](#run-the-service-in-docker) section). You don't have to go through both, just choose one path that fits your needs (I recommend you go with the docker way if docker is available in your case).
 
 ## Run the service directly
 
