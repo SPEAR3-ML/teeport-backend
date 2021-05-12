@@ -21,7 +21,7 @@
     "env-cmd": "^10.1.0",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
-    "mathjs": "^6.6.0",
+    "mathjs": "^7.5.1",
     "project-name-generator": "^2.1.7",
     "redux": "^4.0.5",
     "redux-immutable": "^4.0.0",
