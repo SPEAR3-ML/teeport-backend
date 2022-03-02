@@ -27,7 +27,7 @@
     "redux-immutable": "^4.0.0",
     "reselect": "^4.0.0",
     "shortid": "^2.2.15",
-    "url-parse": "^1.4.7",
+    "url-parse": "^1.5.9",
     "winston": "^3.2.1",
     "ws": "^7.2.0"
   },
